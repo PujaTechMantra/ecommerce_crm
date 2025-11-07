@@ -92,17 +92,24 @@ class VehicleSummaryExport implements FromArray, WithHeadings
                     $item_price = 0;
                 }
                
-                $ExchangeVehicleData = ExchangeVehicle::where('order_id', $item->order_id)->where('vehicle_id', $item->vehicle_id)->orderBy('id', 'ASC')->first();
-                
-                if($ExchangeVehicleData){
-                    $assignedValue = $ExchangeVehicleData->start_date;
-                }else{
-                    $assignedValue = $item->start_date;
-                }
                 // Unassigned Value
-                if($item->status ==='returned'){
+                if($item->status==='assigned'){
+                    $unassignedValue = '';
+                    $assignedValue = 'Assigned';
+                }elseif($item->status==='overdue'){
+                    $unassignedValue = '';
+                    $assignedValue = 'Assigned';
+                }elseif($item->status ==='renewal'){
+                    $unassignedValue = '';
+                    $assignedValue = 'Renewal';
+                }elseif($item->status ==='exchanged'){
+                    $unassignedValue = '';
+                    $assignedValue = 'Exchanged';
+                }elseif($item->status ==='returned'){
+                    $assignedValue = 'Returned';
                     $unassignedValue = $this->formatUnassigned($item->end_date, $item->exchanged_at, $item->order->user_type);
                 }else{
+                    $assignedValue ='';
                     $unassignedValue ='';
                 }
 
@@ -110,14 +117,14 @@ class VehicleSummaryExport implements FromArray, WithHeadings
                     // Vehicle No
                     $item->stock?->vehicle_number ?? 'N/A',
 
-                    // Chassis No
-                    $item->stock?->chassis_number ?? 'N/A',
+                    // // Chassis No
+                    // $item->stock?->chassis_number ?? 'N/A',
 
-                    // Creation Date
-                    $item->stock?->created_at ? \Carbon\Carbon::parse($item->stock?->created_at)->format('d M y h:i A') : '----',
+                    // // Creation Date
+                    // $item->stock?->created_at ? \Carbon\Carbon::parse($item->stock?->created_at)->format('d M y h:i A') : '----',
 
-                    // Last retreived location
-                    '....',
+                    // // Last retreived location
+                    // '....',
                     // Model
                     $item->stock?->product?->title ?? 'N/A',
 
@@ -129,9 +136,6 @@ class VehicleSummaryExport implements FromArray, WithHeadings
                         ? \Carbon\Carbon::parse($item->end_date)->format('d M y h:i A') .
                         ($item->status === "assigned" ? ' (Running)' : '')
                         : '----',
-                
-                    // Duration
-                    $item_duration,
 
                     // Rent Type
                     $item->order?->user_type ?? 'N/A',
@@ -142,7 +146,7 @@ class VehicleSummaryExport implements FromArray, WithHeadings
                         : '',
     
                     // Assigned at
-                    $assignedValue ? \Carbon\Carbon::parse($assignedValue)->format('d M y h:i A') : '',
+                    $assignedValue,
                     // $item->start_date ? \Carbon\Carbon::parse($item->start_date)->format('d M y h:i A') : '----',
 
                     // Unassigned at (with before/after days logic)
@@ -171,16 +175,15 @@ class VehicleSummaryExport implements FromArray, WithHeadings
     {
         return [
             'Vehicle No',
-            'Chassis No',
-            'Creation Date',
-            'Last Retreived Location',
+            // 'Chassis No',
+            // 'Creation Date',
+            // 'Last Retreived Location',
             'Model',
             'Start Date',
             'End Date',
-            'Duration(Days)',
             'Rent Type',
             'Rent Amount',
-            'Assigned  At',
+            'Rent Status',
             'Unassigned At',
             'Rider Name',
             'Mobile No',

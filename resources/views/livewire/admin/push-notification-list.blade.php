@@ -38,6 +38,49 @@
             height: 10px;
             border-radius: 25px;
         }
+        .message-box {
+          border: 1px solid #ccc;
+          padding: 8px;
+          border-radius: 5px;
+          min-height: 120px;
+          background-color: white;
+          overflow-y: auto;
+        }
+        .variable-tag {
+          background-color: #e8f5e9;
+          border: 1px solid #8bc34a;
+          color: #2e7d32;
+          font-size: 12px;
+          border-radius: 6px;
+          padding: 2px 5px;
+          margin: 0 3px;
+          display: inline-flex;
+          align-items: center;
+          font-weight: 500;
+          user-select: none;
+        }
+        .variable-tag .remove-btn {
+          cursor: pointer;
+          margin-left: 5px;
+          color: #2e7d32;
+          font-weight: bold;
+          background: none;
+          border: none;
+          font-size: 14px;
+        }
+        .variable-tag .remove-btn:hover {
+          color: red;
+        }
+        .variable-name{
+            background: #ddd;
+            padding: 2px 10px;
+            font-size: 10px;
+        }
+        .variable-name:hover{
+            background: #ccc;
+            padding: 2px 10px;
+            font-size: 10px;
+        }
 
     </style>
     <div class="d-flex justify-content-start align-items-center mb-2">
@@ -311,27 +354,21 @@
             <span class="badge bg-primary">Selected: {{ count($selectedUsers) }} Riders</span>
           </div>
           <div class="card-body">
-            <form id="pushNotificationForm" wire:submit.prevent="sendPushNotificationForm">
-              <div>
-                  <label for="messageText" class="form-label">Message</label>
-                  <textarea 
-                      class="form-control" 
-                      id="messageText" 
-                      rows="5" 
-                      placeholder="Type your message..." 
-                      wire:keyup="messageText($event.target.value)"></textarea>
-              </div>
-              <small class="form-label d-block mt-1">
-                  Selected rider(s) will receive this message.
-              </small>
-              <button 
-                  type="button" 
-                  class="btn btn-success w-100 mt-3" 
-                  id="sendBtn"
-                  @if(count($selectedUsers) === 0 || !$message) disabled @endif>
-                  <i class="fas fa-paper-plane me-2"></i>Send
-              </button>
-          </form>
+            <div>
+              <button type="button" class="btn variable-name" onclick="insertVariable(':name')">:name</button>
+              <button type="button" class="btn variable-name" onclick="insertVariable(':vehicle_number')">:vehicle_number</button>
+              <button type="button" class="btn variable-name" onclick="insertVariable(':price')">:price</button>
+            </div>
+
+            <label class="form-label">Message</label>
+            <div id="messageText" class="message-box" contenteditable="true"></div>
+
+            <small class="form-label d-block mt-1" style="color:#555;">
+              Selected rider(s) will receive this message.
+            </small>
+
+            <button class="btn btn-success w-100" onclick="submitMessage()" @if(count($selectedUsers) === 0) disabled @endif>
+                  <i class="fas fa-paper-plane me-2"></i>Send</button>
 
              {{-- ✅ Success Alert --}}
             @if (session()->has('success'))
@@ -414,6 +451,57 @@
             }
         });
     });
+</script>
+<script>
+  function insertVariable(variable) {
+      const box = document.getElementById('messageText');
+      const selection = window.getSelection();
+
+      if (!selection.rangeCount) return;
+      const range = selection.getRangeAt(0);
+
+      // Create variable tag
+      const span = document.createElement('span');
+      span.className = 'variable-tag';
+      span.contentEditable = 'false';
+      span.textContent = variable + ' ';
+
+      // Add remove (×)
+      const remove = document.createElement('button');
+      remove.className = 'remove-btn';
+      remove.textContent = '×';
+      remove.onclick = (e) => {
+        e.stopPropagation();
+        span.remove();
+      };
+      span.appendChild(remove);
+
+      // Insert tag
+      range.insertNode(span);
+      range.setStartAfter(span);
+      range.collapse(false);
+      selection.removeAllRanges();
+      selection.addRange(range);
+    }
+
+    // Extract message with placeholders
+    function getMessageText() {
+      const box = document.getElementById('messageText');
+      let message = '';
+      box.childNodes.forEach(node => {
+        if (node.classList && node.classList.contains('variable-tag')) {
+          message += node.textContent.replace('×', '').trim() + ' ';
+        } else {
+          message += node.textContent;
+        }
+      });
+      return message.trim();
+    }
+
+    function submitMessage() {
+      const msg = getMessageText();
+      alert("Message content:\n" + msg);
+    }
 </script>
 
 @endsection

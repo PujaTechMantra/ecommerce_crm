@@ -99,7 +99,6 @@ class PaymentVehicleSummary extends Component
         $grouped = $exchangeVehicles->groupBy('vehicle_id');
 
         $finalCollection = collect();
-
         foreach ($grouped as $vehicleId => $vehicles) {
             // If any assignedVehicle(s) exist for this vehicle_id, push them first
             $matchedAssigned = $assignedVehicles->where('vehicle_id', $vehicleId);
