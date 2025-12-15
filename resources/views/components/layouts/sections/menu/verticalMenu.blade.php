@@ -132,13 +132,18 @@
         </li>
       </ul>
     </li>
-    @if (hasPermissionByParent('model_management'))
+    {{-- @if (hasPermissionByParent('model_management')) --}}
       <li class="menu-item {{ (request()->is('admin/models*')) ? 'open' : '' }}" style="">
         <a href="#" class="menu-link menu-toggle waves-effect" target="_blank">
           <i class="menu-icon tf-icons ri-product-hunt-line"></i>
           <div>Model Management</div>
         </a>
         <ul class="menu-sub">
+           <li class="menu-item {{ (request()->is('admin/models/collections*')) ? 'open' : '' }}">
+            <a href="{{route('admin.product.collections')}}" class="menu-link">
+              <div>Collections</div>
+            </a>
+          </li>
           <li class="menu-item {{ (request()->is('admin/models/categories*')) ? 'open' : '' }}">
             <a href="{{route('admin.product.categories')}}" class="menu-link">
               <div>Categories</div>
@@ -168,7 +173,7 @@
           </li>
         </ul>
       </li>
-    @endif
+    {{-- @endif --}}
      @if (hasPermissionByParent('vehicle_management'))
     <li class="menu-item {{ (request()->is('admin/vehicle*')) ? 'open' : '' }}" style="">
       <a href="#" class="menu-link menu-toggle waves-effect" target="_blank">

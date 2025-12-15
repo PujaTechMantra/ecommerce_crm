@@ -5,10 +5,14 @@ use Illuminate\Support\Facades\Route;
 use App\Livewire\AdminLogin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Admin\AuthController;
-use App\Http\Controllers\Admin\CronController;
 use Illuminate\Support\Facades\DB;
-use GuzzleHttp\Client;
+
 use Symfony\Component\DomCrawler\Crawler;
+
+use App\Livewire\Product\CollectionList;
+
+use App\Http\Controllers\Admin\CronController;
+use GuzzleHttp\Client;
 use App\Livewire\Organization\{OrgDashboard};
 use App\Livewire\Admin\{
     AdminForgotPassword, CustomerAdd, Dashboard, CustomerIndex, CustomerDetails,
@@ -22,6 +26,7 @@ use App\Livewire\Product\{
     MasterSubscription, VehicleCreate, VehicleUpdate, VehicleDetail, VehiclePaymentSummary,
     BomPartList, SellingQuery
 };
+
 use App\Livewire\Master\{
     BannerIndex, FaqIndex, WhyEwentIndex, EmployeeManagementList, EmployeeManagementCreate,
     EmployeeManagementUpdate, DesignationIndex, DesignationPermissionList
@@ -68,6 +73,8 @@ Route::middleware(['auth:admin', 'admin.maintenance'])->prefix('admin')->group(f
 
     // Product Routes
     Route::group(['prefix' => 'models'], function () {
+        Route::get('/collections', CollectionList::class)->name('admin.product.collections');
+
         Route::get('/list', MasterProduct::class)->name('admin.product.index')->middleware('check.permission');
         Route::get('/categories', MasterCategory::class)->name('admin.product.categories');
         Route::get('/sub-categories', MasterSubCategory::class)->name('admin.product.sub_categories');

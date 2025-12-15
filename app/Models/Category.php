@@ -11,9 +11,17 @@ class Category extends Model
     
     protected $table = "categories";
     protected $fillable = [
-        'title'
+        'title',
+        'image',
+        'collection_id',
+        'slug'
     ];
 
+    public function collection()
+    {
+        return $this->belongsTo(Collection::class);
+    }
+    
     public function subcategories()
     {
         return $this->hasMany(SubCategory::class);
