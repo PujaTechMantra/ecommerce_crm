@@ -5,6 +5,7 @@ namespace App\Livewire\Product;
 use Livewire\Component;
 use App\Models\Category;
 use App\Models\SubCategory;
+use App\Models\Collection;
 use Illuminate\Validation\Rule;
 use Livewire\WithPagination;
 
@@ -12,17 +13,38 @@ use Livewire\WithPagination;
 class MasterSubCategory extends Component
 {
     use WithPagination;
-    public $subCategoryId,$category_id,$title,$categories;
 
+    public $subCategoryId;
+    public $collection_id;
+    public $category_id;
+    public $title;
+    public $search = '';
+
+    public $collections = [];
+    public $categories = [];
     
     public function mount()
     {
-        $this->categories = Category::with('collection')
+        $this->collections = Collection::where('status', 1)
+            ->where('is_deleted', 0)
+            ->orderBy('name')
+            ->get();
+
+        $this->categories = collect(); // empty initially
+    }
+
+   public function updatedCollectionId($value)
+    {
+        $value = (int) $value;
+        $this->category_id = null;
+        $this->categories = Category::where('collection_id', $value)
             ->where('status', 1)
             ->whereNull('deleted_at')
-            ->orderBy('title', 'ASC')
+            ->orderBy('title')
             ->get();
     }
+
+
 
     public function store(){
         $this->validate([
@@ -52,12 +74,25 @@ class MasterSubCategory extends Component
         $this->resetForm();
     }
 
-    public function edit($id){
-        $subcategory = SubCategory::findOrFail($id);
+    public function edit($id)
+    {
+        $subcategory = SubCategory::with('category')->findOrFail($id);
+
         $this->subCategoryId = $subcategory->id;
-        $this->category_id = $subcategory->category_id;
         $this->title = $subcategory->title;
+        $this->collection_id = $subcategory->category->collection_id;
+
+        // Load categories of that collection
+        $this->categories = Category::where('collection_id', $this->collection_id)
+            ->where('status', 1)
+            ->whereNull('deleted_at')
+            ->orderBy('title')
+            ->get();
+
+        $this->category_id = $subcategory->category_id;
     }
+
+
 
     public function update()
     {
@@ -100,10 +135,15 @@ class MasterSubCategory extends Component
         session()->flash('message', 'SubCategory status updated successfully!');
     }
 
-    public function resetForm(){
+    public function resetForm()
+    {
+        $this->collection_id = '';
         $this->category_id = '';
         $this->title = '';
+        $this->subCategoryId = null;
+        $this->categories = collect();
     }
+
 
     public function refresh()
     {
@@ -113,10 +153,22 @@ class MasterSubCategory extends Component
         // session()->flash('message', 'Data refreshed successfully!');
     }
     
+    // public function render()
+    // {
+        
+    //     $subcategories = SubCategory::with('category.collection')->paginate(5);
+    //     return view('livewire.product.master-sub-category', [
+    //         'subcategories' => $subcategories
+    //     ]);
+    // }
     public function render()
     {
-        
-        $subcategories = SubCategory::with('category.collection')->paginate(5);
+        $subcategories = SubCategory::with('category.collection')
+            ->when($this->search, function ($query) {
+                $query->where('title', 'like', '%' . $this->search . '%');
+            })
+            ->paginate(5);
+
         return view('livewire.product.master-sub-category', [
             'subcategories' => $subcategories
         ]);

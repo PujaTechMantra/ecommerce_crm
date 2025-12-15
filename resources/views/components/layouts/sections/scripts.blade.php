@@ -39,6 +39,7 @@
 <script type="text/javascript" src="{{asset('build/assets/flatpickr-C_1WDX6v.js')}}"></script>
 <script type="text/javascript" src="{{asset('build/assets/tagify-D6IG1b0s.js')}}"></script>
 <script type="text/javascript" src="{{asset('build/assets/main-DRGn0ueN.js')}}"></script> --}}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <!-- BEGIN: Page JS-->
 @yield('page-script')

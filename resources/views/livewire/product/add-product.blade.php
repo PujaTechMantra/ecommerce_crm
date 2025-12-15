@@ -1,404 +1,410 @@
-<div class="container-fluid px-2 px-md-4">
-  <form wire:submit.prevent="saveProduct" enctype="multipart/form-data">
-    <div class="row gx-4 mb-4">
-      <div class="col-auto my-auto">
-        <div class="h-100">
-          <h5 class="mb-0">Model Management</h5>
-          <div>
-            <small class="text-dark fw-medium">Model</small>
-            <small class="text-light fw-medium arrow">New Model</small>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-4 col-md-6 my-sm-auto ms-sm-auto me-sm-0 mx-auto mt-3">
-        <div class="nav-wrapper position-relative end text-end">
-          <!-- Back Button -->
-          <a class="btn btn-dark btn-sm" href="javascript:history.back();" role="button">
-            <i class="ri-arrow-go-back-line ri-16px me-0 me-sm-2 align-baseline"></i>
-            Back
-          </a>
-          <button type="submit" class="btn btn-secondary btn-sm add-new btn-primary waves-effect waves-light"
-            wire:loading.attr="disabled">
-            <span> Create Model</span>
-          </button>
-        </div>
-      </div>
+<div class="content-wrapper">
+    <div class="container-xxl flex-grow-1 container-p-y">
+            <div class="app-ecommerce">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-6 gap-4 gap-md-0">
+                    <div class="d-flex flex-column justify-content-center">
+                        <h4 class="mb-1">Add a new Product</h4>
+                        <p class="mb-0">Orders placed across your store</p>
+                    </div>
+                    <div class="d-flex align-content-center flex-wrap gap-4">
+                        <button type="submit" class="btn btn-primary">Publish product</button>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 col-lg-8">
+                        <div class="card mb-6">
+                            <div class="card-header">
+                                <h5 class="card-tile mb-0">Product information</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-floating form-floating-outline mb-5">
+                                    <input type="text" class="form-control" id="ecommerce-product-name" placeholder="Product title"
+                                    name="productTitle" aria-label="Product title" />
+                                    <label for="ecommerce-product-name">Name</label>
+                                </div>
+
+                                <div class="row gx-5 mb-5">
+                                    <div class="col">
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="number" class="form-control" id="ecommerce-product-sku" placeholder="00000"
+                                            name="productSku" aria-label="Product SKU" />
+                                            <label for="ecommerce-product-sku">SKU</label>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="text" class="form-control" id="ecommerce-product-barcode" placeholder="0123-4567"
+                                            name="productBarcode" aria-label="Product barcode" />
+                                            <label for="ecommerce-product-name">Barcode</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Comment -->
+                                <div>
+                                    <label class="mb-1">Description (Optional)</label>
+                                    <div class="form-control p-0 pt-1">
+                                        <div class="comment-toolbar border-0 border-bottom">
+                                            <div class="d-flex justify-content-start">
+                                                <span class="ql-formats me-0">
+                                                    <button class="ql-bold"></button>
+                                                    <button class="ql-italic"></button>
+                                                    <button class="ql-underline"></button>
+                                                    <button class="ql-list" value="ordered"></button>
+                                                    <button class="ql-list" value="bullet"></button>
+                                                    <button class="ql-link"></button>
+                                                    <button class="ql-image"></button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="comment-editor border-0 pb-1" id="ecommerce-category-description"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card mb-6">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0 card-title">Product Image</h5>
+                            <a href="javascript:void(0);" class="fw-medium">Add media from URL</a>
+                            </div>
+                            <div class="card-body">
+                            <form action="/upload" class="dropzone needsclick" id="dropzone-basic">
+                                <div class="dz-message needsclick">
+                                <div class="d-flex justify-content-center">
+                                    <div class="avatar avatar-md">
+                                    <span class="avatar-initial rounded bg-label-secondary">
+                                        <i class="icon-base ri ri-upload-2-line icon-24px"></i>
+                                    </span>
+                                    </div>
+                                </div>
+                                <p class="h4 needsclick my-2">Drag and drop your image here</p>
+                                <p class="h6 text-body-secondary d-block fw-normal mb-2">or</p>
+                                <span class="needsclick btn btn-sm btn-outline-primary d-inline" id="btnBrowse">Browse image</span>
+                                </div>
+                                <div class="fallback">
+                                <input name="file" type="file" />
+                                </div>
+                            </form>
+                            </div>
+                        </div>
+                        <div class="card mb-6">
+                            <div class="card-header">
+                            <h5 class="card-title mb-0">Variants</h5>
+                            </div>
+                            <div class="card-body">
+                            <form class="form-repeater">
+                                <div data-repeater-list="group-a">
+                                <div data-repeater-item>
+                                    <div class="row gx-5">
+                                    <div class="mb-6 col-sm-4">
+                                        <div class="form-floating form-floating-outline">
+                                        <select id="select2Basic" class="select2 form-select" data-placeholder="Option"
+                                            data-allow-clear="true">
+                                            <option value="">Option</option>
+                                            <option value="size">Size</option>
+                                            <option value="color">Color</option>
+                                            <option value="weight">Weight</option>
+                                            <option value="smell">Smell</option>
+                                        </select>
+                                        <label for="select2Basic">Option</label>
+                                        </div>
+                                    </div>
+                                    <div class="mb-6 col-sm-8">
+                                        <div class="form-floating form-floating-outline">
+                                        <input type="text" id="form-repeater-1-2" class="form-control" placeholder="Enter size" />
+                                        <label for="form-repeater-1-2">Value</label>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                                </div>
+                                <div>
+                                <button class="btn btn-primary" data-repeater-create>
+                                    <i class="icon-base ri ri-add-line icon-16px me-1_5"></i>
+                                    Add another option
+                                </button>
+                                </div>
+                            </form>
+                            </div>
+                        </div>
+                        <div class="card mb-6">
+                            <div class="card-header">
+                            <h5 class="card-title mb-0">Inventory</h5>
+                            </div>
+                            <div class="card-body">
+                            <div class="row">
+                                <!-- Navigation -->
+                                <div class="col-12 col-md-4 col-xl-5 col-xxl-4 mx-auto card-separator">
+                                <div class="d-flex justify-content-between flex-column mb-4 mb-md-0 pe-md-4">
+                                    <div class="nav-align-left">
+                                    <ul class="nav nav-pills flex-column w-100">
+                                        <li class="nav-item">
+                                        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#restock">
+                                            <i class="icon-base ri ri-add-line me-1_5"></i>
+                                            <span class="align-middle">Restock</span>
+                                        </button>
+                                        </li>
+                                        <li class="nav-item">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#shipping">
+                                            <i class="icon-base ri ri-car-line me-1_5"></i>
+                                            <span class="align-middle">Shipping</span>
+                                        </button>
+                                        </li>
+                                        <li class="nav-item">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#global-delivery">
+                                            <i class="icon-base ri ri-global-line me-1_5"></i>
+                                            <span class="align-middle">Global Delivery</span>
+                                        </button>
+                                        </li>
+                                        <li class="nav-item">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#attributes">
+                                            <i class="icon-base ri ri-link-m me-1_5"></i>
+                                            <span class="align-middle">Attributes</span>
+                                        </button>
+                                        </li>
+                                        <li class="nav-item">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#advanced">
+                                            <i class="icon-base ri ri-lock-unlock-line me-1_5"></i>
+                                            <span class="align-middle">Advanced</span>
+                                        </button>
+                                        </li>
+                                    </ul>
+                                    </div>
+                                </div>
+                                </div>
+                                <!-- /Navigation -->
+                                <!-- Options -->
+                                <div class="col-12 col-md-8 col-xl-7 col-xxl-8 pt-6 pt-md-0">
+                                <div class="tab-content p-0 pe-xl-0 ps-md-4">
+                                    <!-- Restock Tab -->
+                                    <div class="tab-pane fade show active" id="restock" role="tabpanel">
+                                    <h6 class="text-body">Options</h6>
+                                    <div class="row mb-4 g-4">
+                                        <div class="col-12 col-sm-8 col-lg-12 col-xxl-8">
+                                        <div>
+                                            <input type="number" class="form-control form-control-sm" id="ecommerce-product-stock"
+                                            placeholder="Add to Stock" name="Add to Stock" aria-label="Add to Stock" />
+                                        </div>
+                                        </div>
+                                        <div class="col-6 col-sm-4 col-lg-6 col-xxl-4">
+                                        <button class="btn btn-primary"><i
+                                            class="icon-base ri ri-check-line icon-16px me-1_5"></i>Confirm</button>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-2 fw-normal">Product in stock now: 54</h6>
+                                        <h6 class="mb-2 fw-normal">Product in transit: 390</h6>
+                                        <h6 class="mb-2 fw-normal">Last time restocked: 24th June, 2023</h6>
+                                        <h6 class="mb-0 fw-normal">Total stock over lifetime: 2430</h6>
+                                    </div>
+                                    </div>
+                                    <!-- Shipping Tab -->
+                                    <div class="tab-pane fade" id="shipping" role="tabpanel">
+                                    <h6 class="mb-3 text-body">Shipping Type</h6>
+                                    <div>
+                                        <div class="form-check mb-4">
+                                        <input class="form-check-input" type="radio" name="shippingType" id="seller" />
+                                        <label class="form-check-label" for="seller">
+                                            <span class="h6">Fulfilled by Seller</span><br />
+                                            <small>You'll be responsible for product delivery.<br />
+                                            Any damage or delay during shipping may cost you a Damage fee.</small>
+                                        </label>
+                                        </div>
+                                        <div class="form-check mb-6">
+                                        <input class="form-check-input" type="radio" name="shippingType" id="companyName" checked />
+                                        <label class="form-check-label" for="companyName">
+                                            <span class="h6">Fulfilled by Company name &nbsp;<span
+                                                class="badge rounded-pill badge-warning bg-label-warning fs-tiny py-1">RECOMMENDED</span></span><br />
+                                            <small>Your product, Our responsibility.<br />
+                                            For a measly fee, we will handle the delivery process for you.</small>
+                                        </label>
+                                        </div>
+                                        <p class="mb-0">See our <a href="javascript:void(0);">Delivery terms and conditions</a> for details
+                                        </p>
+                                    </div>
+                                    </div>
+                                    <!-- Global Delivery Tab -->
+                                    <div class="tab-pane fade" id="global-delivery" role="tabpanel">
+                                    <h6 class="mb-3 text-body">Global Delivery</h6>
+                                    <!-- Worldwide delivery -->
+                                    <div class="form-check mb-4">
+                                        <input class="form-check-input" type="radio" name="globalDel" id="worldwide" />
+                                        <label class="form-check-label" for="worldwide">
+                                        <span class="h6">Worldwide delivery</span><br />
+                                        <small>Only available with Shipping method: <a href="javascript:void(0);">Fulfilled by Company
+                                            name</a></small>
+                                        </label>
+                                    </div>
+                                    <!-- Global delivery -->
+                                    <div class="form-check mb-4">
+                                        <input class="form-check-input" type="radio" name="globalDel" checked />
+                                        <label class="form-check-label w-75 pe-12 mb-2" for="country-selected">
+                                        <span class="h6">Selected Countries</span>
+                                        </label>
+                                        <div>
+                                        <input type="text" class="form-control form-control-sm" placeholder="Countries"
+                                            id="country-selected" />
+                                        </div>
+                                    </div>
+                                    <!-- Local delivery -->
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="globalDel" id="local" />
+                                        <label class="form-check-label" for="local">
+                                        <span class="h6">Local delivery</span><br />
+                                        <small>Deliver to your country of residence : <a href="javascript:void(0);">Change profile
+                                            address</a></small>
+                                        </label>
+                                    </div>
+                                    </div>
+                                    <!-- Attributes Tab -->
+                                    <div class="tab-pane fade" id="attributes" role="tabpanel">
+                                    <h6 class="mb-2 text-body">Attributes</h6>
+                                    <div>
+                                        <!-- Fragile Product -->
+                                        <div class="form-check mb-4">
+                                        <input class="form-check-input" type="checkbox" value="fragile" id="fragile" />
+                                        <label class="form-check-label" for="fragile">
+                                            <span class="h6 fw-normal">Fragile Product</span>
+                                        </label>
+                                        </div>
+                                        <!-- Biodegradable -->
+                                        <div class="form-check mb-4">
+                                        <input class="form-check-input" type="checkbox" value="biodegradable" id="biodegradable" />
+                                        <label class="form-check-label" for="biodegradable">
+                                            <span class="h6 fw-normal">Biodegradable</span>
+                                        </label>
+                                        </div>
+                                        <!-- Frozen Product -->
+                                        <div class="form-check mb-4">
+                                        <input class="form-check-input" type="checkbox" id="frozen" value="frozen" checked />
+                                        <label class="form-check-label w-75 pe-12 mb-2" for="frozen">
+                                            <span class="h6 fw-normal mb-1">Frozen Product</span>
+                                        </label>
+                                        <div>
+                                            <input type="number" class="form-control form-control-sm" placeholder="Max. allowed Temperature"
+                                            id="temp" />
+                                        </div>
+                                        </div>
+                                        <!-- Exp Date -->
+                                        <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="expDate" id="expDate" checked />
+                                        <label class="form-check-label w-75 pe-12 mb-2" for="expDate">
+                                            <span class="h6 fw-normal mb-1">Expiry Date of Product</span>
+                                        </label>
+                                        <div>
+                                            <input type="date" class="product-date form-control form-control-sm" id="flatpickr-date" />
+                                        </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                    <!-- /Attributes Tab -->
+                                    <!-- Advanced Tab -->
+                                    <div class="tab-pane fade" id="advanced" role="tabpanel">
+                                    <h6 class="mb-3 text-body">Advanced</h6>
+                                    <div class="row">
+                                        <!-- Product Id Type -->
+                                        <div class="col">
+                                        <h6 class="mb-2">Product ID Type</h6>
+                                        <div>
+                                            <select id="product-id" class="form-select form-select-sm" data-placeholder="ISBN"
+                                            data-allow-clear="true">
+                                            <option value="ISBN">ISBN</option>
+                                            <option value="UPC">UPC</option>
+                                            <option value="EAN">EAN</option>
+                                            <option value="JAN">JAN</option>
+                                            </select>
+                                        </div>
+                                        </div>
+                                        <!-- Product Id -->
+                                        <div class="col">
+                                        <h6 class="mb-2">Product ID</h6>
+                                        <div>
+                                            <input type="number" id="product-id-1" class="form-control form-control-sm"
+                                            placeholder="ISBN Number" />
+                                        </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                    <!-- /Advanced Tab -->
+                                </div>
+                                </div>
+                                <!-- /Options-->
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-lg-4">
+                        <div class="card mb-6">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Pricing</h5>
+                            </div>
+                            <div class="card-body">
+                            <!-- Base Price -->
+                           
+                            </div>
+                        </div>
+                        <div class="card mb-6">
+                            <div class="card-header">
+                            <h5 class="card-title mb-0">Organize</h5>
+                            </div>
+                            <div class="card-body">
+                            <!-- Vendor -->
+                            <div class="mb-5 col ecommerce-select2-dropdown">
+                                <select id="vendor" class="form-select form-select-sm" data-placeholder="Select Vendor">
+                                <option value="">Select Vendor</option>
+                                <option value="men-clothing">Men's Clothing</option>
+                                <option value="women-clothing">Women's-clothing</option>
+                                <option value="kid-clothing">Kid's-clothing</option>
+                                </select>
+                            </div>
+                            <!-- Category -->
+                            <div class="mb-5 col ecommerce-select2-dropdown d-flex justify-content-between align-items-center">
+                                <div class="w-100 me-4">
+                                <select id="category-org" class="form-select form-select-sm" data-placeholder="Select Category">
+                                    <option value="">Select Category</option>
+                                    <option value="Household">Household</option>
+                                    <option value="Management">Management</option>
+                                    <option value="Electronics">Electronics</option>
+                                    <option value="Office">Office</option>
+                                    <option value="Automotive">Automotive</option>
+                                </select>
+                                </div>
+                                <div>
+                                <button class="btn btn-outline-primary btn-icon">
+                                    <i class="icon-base ri ri-add-line"></i>
+                                </button>
+                                </div>
+                            </div>
+                            <!-- Collection -->
+                            <div class="mb-5 col ecommerce-select2-dropdown">
+                                <select id="collection" class="form-select form-select-sm" data-placeholder="Collection">
+                                <option value="">Collection</option>
+                                <option value="men-clothing">Men's Clothing</option>
+                                <option value="women-clothing">Women's-clothing</option>
+                                <option value="kid-clothing">Kid's-clothing</option>
+                                </select>
+                            </div>
+                            <!-- Status -->
+                            <div class="mb-5 col ecommerce-select2-dropdown">
+                                <select id="status-org" class="form-select form-select-sm" data-placeholder="Select Status">
+                                <option value="">Select Status</option>
+                                <option value="Published">Published</option>
+                                <option value="Scheduled">Scheduled</option>
+                                <option value="Inactive">Inactive</option>
+                                </select>
+                            </div>
+                            <!-- Tags -->
+                            <div class="mb-4">
+                                <div class="form-floating form-floating-outline">
+                                <input id="ecommerce-product-tags" class="form-control h-auto" name="ecommerce-product-tags"
+                                    value="Normal,Standard,Premium" aria-label="Product Tags" />
+                                <label for="ecommerce-product-tags">Tags</label>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
     </div>
-    <div class="row">
-      @if(session()->has('message'))
-      <div class="alert alert-success" id="flashMessage">
-        {{ session('message') }}
-      </div>
-      @endif
-
-      @if(session()->has('error'))
-      <div class="alert alert-danger">
-        {{ session('error') }}
-      </div>
-      @endif
-    </div>
-
-    <div class="row">
-      <!-- Left Card -->
-      <div class="col-lg-8">
-        <div class="card card-plain p-4">
-          <div class="card-body p-3">
-            <div class="row">
-              <!-- Product Title -->
-              <div class="col-9">
-                <div class="form-floating form-floating-outline mb-3 mt-2">
-                  <input type="text" wire:model="title" class="form-control border border-2 p-2"
-                    placeholder="Enter Title">
-                  <label>Model Title <span class="text-danger">*</span></label>
-                </div>
-                  @error('title')
-                  <p class="text-danger inputerror">{{ $message }}</p>
-                  @enderror
-              </div>
-              <div class="col-3">
-                <div class="form-floating form-floating-outline mb-3 mt-2">
-                  <input type="text" wire:model="product_sku" class="form-control border border-2 p-2"
-                    placeholder="Enter sku">
-                  <label>Model SKU <span class="text-danger">*</span></label>
-                </div>
-                @error('product_sku')
-                <p class="text-danger inputerror">{{ $message }}</p>
-                @enderror
-              </div>
-
-              <!-- Category Select -->
-              <div class="col-6">
-                <div class="mb-2 form-floating form-floating-outline">
-                  <select wire:model="category_id" wire:change="GetSubcat($event.target.value)"
-                    class="form-select border border-2 p-2">
-                    <option value="" selected hidden>Select Category</option>
-                    @foreach($categories as $category)
-                    <option value="{{ $category->id }}">{{ $category->title }}</option>
-                    @endforeach
-                  </select>
-                  <label class="form-label">Category</label>
-                </div>
-                @error('category_id')
-                <p class="text-danger inputerror">{{ $message }}</p>
-                @enderror
-              </div>
-              <!-- Subcategory Select -->
-              <div class="col-6">
-                <div class="form-floating form-floating-outline mb-2">
-                  <select wire:model="sub_category_id" class="form-select border border-2 p-2">
-                    <option value="" selected hidden>Select Subcategory</option>
-                    @foreach($subcategories as $subcategory)
-                    <option value="{{ $subcategory->id }}" {{ $subcategory->id == $sub_category_id ? 'selected' : '' }}>
-                      {{ $subcategory->title }}</option>
-                    @endforeach
-                  </select>
-                  <label class="form-label">Subcategory</label>
-                </div>
-                @error('sub_category_id')
-                <p class="text-danger inputerror">{{ $message }}</p>
-                @enderror
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row p-0 mt-2">
-          <div class="col-lg-6">
-             <!-- Pricing -->
-            <div class="card card-plain mb-3">
-              <div class="card-body p-3">
-                <h6>Availablity</h6>
-                <hr>
-
-                <!-- Selling Price -->
-                <div class="mb-2">
-                  <label class="form-check-label" for="is_selling">
-                    <input type="checkbox" id="is_selling" wire:model="is_selling" class="form-check-input"
-                      wire:change="toggleSellingFields">
-                    For Selling
-                  </label>
-                </div>
-
-                @if($is_selling)
-                  <div class="form-floating form-floating-outline mb-2 mt-2">
-                    <input type="number" wire:model="base_price" class="form-control border border-2 p-2"
-                      placeholder="Enter Base Price">
-                    <label>Base Price</label>
-                  </div>
-                  @error('base_price')
-                  <p class="text-danger inputerror">{{ $message }}</p>
-                  @enderror
-
-                  <div class="form-floating form-floating-outline mb-2 mt-2">
-                    <input type="number" wire:model="display_price" class="form-control border border-2 p-2"
-                      placeholder="Enter Display Price">
-                    <label>Display Price</label>
-                  </div>
-                  @error('display_price')
-                  <p class="text-danger inputerror">{{ $message }}</p>
-                  @enderror
-                @endif
-
-                <!-- Rent -->
-                <div class="mb-2">
-                  <label class="form-check-label" for="is_rent">
-                    <input type="checkbox" id="is_rent" wire:model="is_rent" class="form-check-input"
-                      wire:change="toggleRentFields">
-                    For Rental
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-6">
-            <!-- Product Type -->
-            <div class="card card-plain">
-              <div class="card-body p-3">
-                <h6>Model Tags & Key</h6>
-                <!-- Selling Price -->
-                <div class="mb-2">
-                  @foreach ($product_type as $ptype)
-                  <div class="form-check">
-                    <input type="checkbox" id="product_type_{{ $ptype->id }}" wire:model="selectedProductTypes"
-                      value="{{ $ptype->title }}" class="form-check-input">
-                    <label class="form-check-label" for="product_type_{{ $ptype->id }}">
-                      {{ $ptype->title }}
-                    </label>
-                  </div>
-                  @endforeach
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card card-plain mt-3 p-4">
-          <div class="card-body p-3">
-            <div class="row">
-              <h5 class="mb-4">Feature Information</h5>
-
-              <!-- Loop through each feature -->
-              @foreach($features as $index => $feature)
-              <div class="col-12 mb-3 d-flex align-items-center product-feature" id="feature_{{ $index }}">
-                <!-- Feature Title Input -->
-                <div class="d-flex flex-column w-100 me-2">
-                  <div class="form-floating form-floating-outline mb-2">
-                    <input type="text" wire:model="features.{{ $index }}.title" class="form-control border border-2 p-2"
-                      placeholder="Enter Feature Title">
-                    <label>Title</label>
-                  </div>
-                </div>
-
-                <!-- Remove Button for feature -->
-                <div>
-                  <button type="button" class="btn btn-danger btn-sm mt-n2-important" wire:click="removeFeature({{ $index }})">
-                    <i class="ri-close-circle-line"></i>
-                  </button>
-                </div>
-              </div>
-              @error("features.$index.title")
-              <p class="text-danger inputerror">{{ $message }}</p>
-              @enderror
-              @endforeach
-
-              <!-- Add More Button -->
-              <div class="col-12 text-end mt-3">
-                <button type="button" class="btn btn-secondary btn-sm add-new btn-primary waves-effect waves-light"
-                  wire:click="addFeature">
-                  <i class="ri-add-circle-fill"> </i> Add
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-{{-- <div class="card card-plain mt-3 p-4">
-          <div class="card-body p-3">
-            <div class="row">
-              <h5 class="mb-4">Meta Information</h5>
-              <!-- Meta Title -->
-              <div class="form-floating form-floating-outline mb-2 mt-2">
-                <input type="text" wire:model="meta_title" class="form-control border border-2 p-2"
-                  placeholder="Enter Meta Title">
-                <label>Meta Title</label>
-              </div>
-              @error('meta_title')
-              <p class="text-danger inputerror">{{ $message }}</p>
-@enderror
-
-<!-- Meta Keywords -->
-<div class="form-floating form-floating-outline mb-2 mt-2">
-  <textarea wire:model="meta_keyword" class="form-control border border-2 p-2"
-    placeholder="Enter Meta Keywords"></textarea>
-  <label>Meta Keywords</label>
 </div>
-@error('meta_keyword')
-<p class="text-danger inputerror">{{ $message }}</p>
-@enderror
-
-<!-- Meta Description -->
-<div class="form-floating form-floating-outline mb-2 mt-2">
-  <textarea wire:model="meta_description" class="form-control border border-2 p-2"
-    placeholder="Enter Meta Description"></textarea>
-  <label>Meta Description </label>
-</div>
-@error('meta_description')
-<p class="text-danger inputerror">{{ $message }}</p>
-@enderror
-</div>
-</div>
-</div> --}}
-</div>
-<!-- Right Card -->
-<div class="col-lg-4">
-  <div class="card card-plain mb-3">
-    <div class="card-body p-3">
-      <div class="mb-2">
-        <label class="form-check-label" for="is_driving_licence_required">
-          <input type="checkbox" id="is_driving_licence_required" wire:model="is_driving_licence_required"
-            class="form-check-input">
-          Driving Licence Required
-        </label>
-      </div>
-    </div>
-  </div>
-  <div class="card card-plain mb-3">
-    <div class="card-body p-3">
-      <h6>Model Image</h6>
-      <!-- Product Image -->
-      <div class="mb-2 mt-2">
-        <input type="file" wire:model="image" id="image" accept="image/*"
-          class="form-control border border-2 p-2 d-none" onchange="updateImage(event, 'image')">
-        <img id="image-preview" src="{{ $image ? $image->temporaryUrl() : asset('assets/img/default-product.webp') }}"
-          alt="Selected Image" class="w-80 h-52 object-cover rounded-lg border border-gray-300" style="width: 100%"
-          onclick="document.getElementById('image').click()">
-      </div>
-      @error('image')
-      <p class="text-danger inputerror">{{ $message }}</p>
-      @enderror
-    </div>
-  </div>
-
-  <div class="card card-plain mb-3">
-    <div class="card-body p-3">
-      <h6>Additional Model Images</h6>
-      <div class="mb-2 mt-2">
-        <!-- Input for file selection -->
-        <input type="file" wire:model="multipleImages" id="multipleImages" accept="image/*" multiple
-          class="form-control border border-2 p-2 d-none" onchange="previewMultipleImages(event)">
-
-        <!-- Drag and Drop Area -->
-        <button type="button" onclick="document.getElementById('multipleImages').click()"
-          class="border-0 bg-white w-100">
-          <div id="drop-zone" class="drag-drop-area">
-            <p>Choose your images.</p>
-          </div>
-        </button>
-        <!-- Preview Area -->
-        <div id="multiple-image-preview" class="row mt-2">
-          @foreach ($multipleImages as $key => $image)
-          <div class="col-6 mb-3">
-            <img src="{{ $image->temporaryUrl() }}" alt="Selected Image {{ $key + 1 }}"
-              class="w-100 h-100 object-cover rounded-lg border border-gray-300 p-3">
-          </div>
-          @endforeach
-        </div>
-
-
-      </div>
-      @error('multipleImages.*')
-      <p class="text-danger inputerror">{{ $message }}</p>
-      @enderror
-    </div>
-  </div>
-  
-</div>
-</div>
-</form>
-<div class="loader-container" wire:loading>
-  <div class="loader"></div>
-</div>
-</div>
-
-@section('page-script')
-<script>
-  function updateImage(event, name) {
-    const fileInput = event.target;
-    const file = fileInput.files[0];
-    const imageElement = document.getElementById(`image-preview`);
-
-    // Check if a file was selected
-    if (file) {
-      const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-
-      // Check if the selected file type is valid
-      if (validTypes.includes(file.type)) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          if (imageElement) {
-            imageElement.src = e.target.result; // Update the image source with the file's data URL
-          }
-        };
-        reader.readAsDataURL(file); // Read the file as a data URL for preview
-      } else {
-        // Alert user about invalid file type
-        alert('Invalid file type. Please select a valid image (JPEG, PNG, GIF, WEBP).');
-        fileInput.value = ''; // Reset the input field
-        if (imageElement) {
-          // Reset the image to the default preview image
-          imageElement.src = '{{ asset('
-          assets / img /
-            default -product.webp ') }}';
-        }
-      }
-    }
-  }
-</script>
-<!-- Include Livewire Script -->
-<!-- Include CKEditor 5 -->
-<script type="text/javascript" src="{{ asset('build/ckeditor/ckeditor.js') }}"></script>
-
-<script>
-  // Wait until the content is loaded before initializing CKEditor
-  window.addEventListener('ck_editor_load', function (event) {
-    // Handle short_desc
-    var shortDescTextArea = document.getElementById('short_desc');
-    if (shortDescTextArea) {
-      // Check if CKEditor instance already exists and destroy it
-      if (CKEDITOR.instances['short_desc']) {
-        CKEDITOR.instances['short_desc'].destroy(true);
-      }
-
-      // Initialize CKEditor for short_desc
-      if (typeof CKEDITOR !== 'undefined') {
-        CKEDITOR.replace('short_desc');
-        // Sync CKEditor data to Livewire
-        CKEDITOR.instances['short_desc'].on('change', function () {
-          @this.set('short_desc', CKEDITOR.instances['short_desc'].getData());
-        });
-      } else {
-        console.error('CKEditor is not defined!');
-      }
-    }
-
-    // Handle long_desc
-    var longDescTextArea = document.getElementById('long_desc');
-    if (longDescTextArea) {
-      // Check if CKEditor instance already exists and destroy it
-      if (CKEDITOR.instances['long_desc']) {
-        CKEDITOR.instances['long_desc'].destroy(true);
-      }
-
-      // Initialize CKEditor for long_desc
-      if (typeof CKEDITOR !== 'undefined') {
-        CKEDITOR.replace('long_desc');
-        // Sync CKEditor data to Livewire
-        CKEDITOR.instances['long_desc'].on('change', function () {
-          @this.set('long_desc', CKEDITOR.instances['long_desc'].getData());
-        });
-      } else {
-        console.error('CKEditor is not defined!');
-      }
-    }
-  });
-</script>
-
-
-@endsection

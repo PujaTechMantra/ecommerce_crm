@@ -18,6 +18,10 @@
   <link rel="canonical" href="{{ config('variables.productPage') ? config('variables.productPage') : '' }}">
   <!-- Favicon -->
   <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/favicon/favicon.ico') }}" />
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<!-- Select2 -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
 
 
   <!-- Include Styles -->

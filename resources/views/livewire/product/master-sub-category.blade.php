@@ -74,7 +74,7 @@
                                             <td class="align-middle text-end px-4">
                                                 <button wire:click="edit({{ $subcategory->id }})" class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect btn-sm" title="Edit"><i class="ri-edit-box-line ri-20px text-info"></i></button>
 
-                                                <button wire:click="destroy({{ $subcategory->id }})" class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect btn-sm" title="Delete"> <i class="ri-delete-bin-7-line ri-20px text-danger"></i> </button>
+                                                <button wire:click="$dispatch('confirmDelete', { itemId: {{ $subcategory->id }} })" class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect btn-sm" title="Delete"> <i class="ri-delete-bin-7-line ri-20px text-danger"></i> </button>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -99,22 +99,30 @@
                                 <h5>Create Subcategory</h5>  
                             </div>
                          <form wire:submit.prevent="{{ $subCategoryId ? 'update' : 'store' }}">
-                            <div class="form-floating form-floating-outline">
-                               <select wire:model="category_id" class="form-control border border-2 p-2">
-                                    <option value="" selected hidden>Select Category</option>
-                                    @foreach($categories as $category)
-                                        <option value="{{ $category->id }}">
-                                            {{ $category->title }} 
-                                            @if($category->collection)
-                                                ({{ $category->collection->name }})
-                                            @endif
-                                        </option>
+                            <div class="form-floating form-floating-outline mb-4">
+                                <select wire:model="collection_id" class="form-control border border-2 p-2">
+                                    <option value="">Select Collection</option>
+                                    @foreach($collections as $collection)
+                                        <option value="{{ $collection->id }}">{{ $collection->name }}</option>
                                     @endforeach
                                 </select>
-                                <label>Category </label>
-                                @error('category_id') <span class="text-danger">{{ $message }}</span> @enderror
+                                <label>Collection</label>
 
                             </div>
+
+                            <div class="form-floating form-floating-outline">
+                                <select wire:model="category_id" class="form-control border border-2 p-2">
+                                    <option value="">Select Category</option>
+                                    @foreach($categories as $category)
+                                        <option value="{{ $category->id }}">{{ $category->title }}</option>
+                                    @endforeach
+                                </select>
+                                <label>Category</label>
+                                @error('category_id') <span class="text-danger">{{ $message }}</span> @enderror
+                            </div>
+
+
+
                             <div class="form-floating form-floating-outline mb-5 fv-plugins-icon-container mt-4">
                                 <input type="text" wire:model="title" class="form-control border border-2 p-2" placeholder="Enter Sub-Category">
                                 <label>Sub-Category Title</label>
@@ -136,4 +144,27 @@
         </div>
     </div>
 </div>
+@section('page-script')
+<script>
+    window.addEventListener('confirmDelete', function (event) {
+        let itemId = event.detail.itemId;
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                @this.call('delete', itemId); 
+            }
+        });
+    });
+
+</script>
+@endsection
+
+
 

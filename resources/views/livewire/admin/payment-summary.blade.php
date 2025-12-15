@@ -121,7 +121,7 @@
                             margin-bottom: 20px;" class="text-start text-uppercase">
                                  <label for="startDate" class="form-label small mb-1">Models</label>
                             <select
-                                class="form-select border border-2 p-2 custom-input-sm" wire:model="model" wire:change="FilterModel($event.target.value)">
+                                class="form-select border   border-2 p-2 custom-input-sm" wire:model="model" wire:change="FilterModel($event.target.value)">
                                 <option value="" selected hidden>Select model</option>
                                 @foreach($models as $model_item)
                                 <option value="{{ $model_item->id }}">{{$model_item->category->title}}|{{ $model_item->title }}</option>

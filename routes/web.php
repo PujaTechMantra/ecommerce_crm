@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Symfony\Component\DomCrawler\Crawler;
 
 use App\Livewire\Product\CollectionList;
+use App\Livewire\Product\ProductList;
 
 use App\Http\Controllers\Admin\CronController;
 use GuzzleHttp\Client;
@@ -21,7 +22,7 @@ use App\Livewire\Admin\{
     PaymentVehicleSummary, RefundSummary, ChangePassword,AdminOrganizationIndex,AdminOrganizationDashboard,AdminOrganizationInvoices,AdminOrganizationPayments,PushNotificationList
 };
 use App\Livewire\Product\{
-    MasterCategory, MasterSubCategory, MasterProduct, AddProduct, UpdateProduct,
+    MasterCategory, MasterSubCategory, ColorList, SizeList, MasterProduct, AddProduct, UpdateProduct,
     GalleryIndex, StockProduct, MasterProductType, ProductWiseVehicle, VehicleList,
     MasterSubscription, VehicleCreate, VehicleUpdate, VehicleDetail, VehiclePaymentSummary,
     BomPartList, SellingQuery
@@ -75,9 +76,12 @@ Route::middleware(['auth:admin', 'admin.maintenance'])->prefix('admin')->group(f
     Route::group(['prefix' => 'models'], function () {
         Route::get('/collections', CollectionList::class)->name('admin.product.collections');
 
-        Route::get('/list', MasterProduct::class)->name('admin.product.index');
+        Route::get('/list', ProductList::class)->name('admin.product.index');
         Route::get('/categories', MasterCategory::class)->name('admin.product.categories');
         Route::get('/sub-categories', MasterSubCategory::class)->name('admin.product.sub_categories');
+        Route::get('/colors', ColorList::class)->name('admin.product.colors');
+        Route::get('/sizes', SizeList::class)->name('admin.product.sizes');
+        
         Route::get('/keywords', MasterProductType::class)->name('admin.product.type');
         Route::get('/new', AddProduct::class)->name('admin.product.add');
         Route::get('/update/{productId}', UpdateProduct::class)->name('admin.product.update');
