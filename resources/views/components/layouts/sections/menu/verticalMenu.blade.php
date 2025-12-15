@@ -25,7 +25,6 @@
         <div>Dashboards</div>
       </a>
     </li>
-      @if (hasPermissionByParent('master_management'))
           <li class="menu-item {{ (request()->is('admin/master*')) ? 'open' : '' }}">
             <a href="#" class="menu-link menu-toggle waves-effect" target="_blank">
               <i class="menu-icon tf-icons ri-stock-line"></i>
@@ -54,8 +53,6 @@
               </li>
             </ul>
           </li>
-      @endif
-      @if (hasPermissionByParent('employee_management'))
         <li class="menu-item {{ (request()->is('admin/employee*')) ? 'open' : '' }}">
           <a href="#" class="menu-link menu-toggle waves-effect" target="_blank">
             <i class="menu-icon tf-icons ri-group-line"></i>
@@ -74,7 +71,6 @@
             </li>
           </ul>
         </li>
-      @endif
        
     {{-- <li class="menu-item {{ (request()->is('admin/master*')) ? 'open' : '' }}">
       <a href="#" class="menu-link menu-toggle waves-effect" target="_blank">
@@ -94,7 +90,6 @@
         </li>
       </ul>
     </li> --}}
-    @if (hasPermissionByParent('rider_management'))
       <li class="menu-item {{ (request()->is('admin/rider*')) ? 'open' : '' }}">
         <a href="#" class="menu-link menu-toggle waves-effect" target="_blank">
           <i class="menu-icon tf-icons ri-bike-line"></i>
@@ -118,7 +113,6 @@
           </li> --}}
         </ul>
       </li>
-    @endif
     <li class="menu-item {{ (request()->is('admin/stock*')) ? 'open' : '' }}" style="">
       <a href="#" class="menu-link menu-toggle waves-effect" target="_blank">
         <i class="menu-icon tf-icons ri-store-line"></i>
@@ -136,7 +130,7 @@
       <li class="menu-item {{ (request()->is('admin/models*')) ? 'open' : '' }}" style="">
         <a href="#" class="menu-link menu-toggle waves-effect" target="_blank">
           <i class="menu-icon tf-icons ri-product-hunt-line"></i>
-          <div>Model Management</div>
+          <div>Master Management</div>
         </a>
         <ul class="menu-sub">
            <li class="menu-item {{ (request()->is('admin/models/collections*')) ? 'open' : '' }}">
@@ -174,7 +168,6 @@
         </ul>
       </li>
     {{-- @endif --}}
-     @if (hasPermissionByParent('vehicle_management'))
     <li class="menu-item {{ (request()->is('admin/vehicle*')) ? 'open' : '' }}" style="">
       <a href="#" class="menu-link menu-toggle waves-effect" target="_blank">
         <i class="menu-icon tf-icons ri-bike-line"></i>
@@ -194,8 +187,6 @@
         </li>
       </ul>
     </li>
-    @endif
-    @if (hasPermissionByParent('payment_management'))
       <li class="menu-item {{ (request()->is('admin/payment*')) ? 'open' : '' }}" style="">
         <a href="#" class="menu-link menu-toggle waves-effect" target="_blank">
           <i class="menu-icon tf-icons ri-wallet-line"></i>
@@ -224,8 +215,6 @@
           </li>
         </ul>
       </li>
-    @endif
-     @if (hasPermissionByParent('offer_management'))
       <li class="menu-item {{ (request()->is('admin/offer*')) ? 'open' : '' }}" style="">
       <a href="#" class="menu-link menu-toggle waves-effect" target="_blank">
         <i class="menu-icon tf-icons ri-price-tag-3-line"></i>
@@ -239,7 +228,6 @@
         </li>
       </ul>
     </li>
-     @endif
  {{-- @if (hasPermissionByParent('bom_part')) --}}
    <li class="menu-item {{ (request()->is('admin/bom-parts*')) ? 'open' : '' }}" style="">
       <a href="#" class="menu-link menu-toggle waves-effect" target="_blank">
@@ -271,7 +259,6 @@
     </li>
   {{-- @endif --}}
   {{-- Organization Management --}}
-      @if (hasPermissionByParent('organization_management'))
         <li class="menu-header">Organization Management</li>
         <li class="menu-item {{ (request()->is('admin/organization*')) ? 'open' : '' }}">
           <a href="#" class="menu-link menu-toggle waves-effect">
@@ -290,7 +277,6 @@
             </li>
           </ul>
         </li>
-      @endif
   {{-- Push Notifications Management --}}
       {{-- @if (hasPermissionByParent('organization_management')) --}}
         <li class="menu-item {{ (request()->is('admin/notifications*')) ? 'open' : '' }}">

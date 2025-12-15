@@ -51,7 +51,14 @@
                                         <tr>
                                             <td class="align-middle text-center">{{ $k + 1 }}</td>
                                             <td class="align-middle text-center">{{ ucwords($subcategory->title) }}</td>
-                                            <td class="align-middle text-center">{{ ucwords($subcategory->category?$subcategory->category->title : "") }}</td>
+                                            <td class="align-middle text-center">
+                                                @if($subcategory->category)
+                                                    {{ $subcategory->category->title }}
+                                                    @if($subcategory->category->collection)
+                                                        ({{ $subcategory->category->collection->name }})
+                                                    @endif
+                                                @endif
+                                            </td>
                                            
                                             <td class="align-middle text-sm" style="text-align: center;">
                                                 <div class="form-check form-switch">
@@ -93,18 +100,24 @@
                             </div>
                          <form wire:submit.prevent="{{ $subCategoryId ? 'update' : 'store' }}">
                             <div class="form-floating form-floating-outline">
-                                <select wire:model="category_id" class="form-control border border-2 p-2">
+                               <select wire:model="category_id" class="form-control border border-2 p-2">
                                     <option value="" selected hidden>Select Category</option>
                                     @foreach($categories as $category)
-                                        <option value="{{ $category->id }}">{{ $category->title }}</option>
+                                        <option value="{{ $category->id }}">
+                                            {{ $category->title }} 
+                                            @if($category->collection)
+                                                ({{ $category->collection->name }})
+                                            @endif
+                                        </option>
                                     @endforeach
                                 </select>
                                 <label>Category </label>
                                 @error('category_id') <span class="text-danger">{{ $message }}</span> @enderror
+
                             </div>
                             <div class="form-floating form-floating-outline mb-5 fv-plugins-icon-container mt-4">
                                 <input type="text" wire:model="title" class="form-control border border-2 p-2" placeholder="Enter Sub-Category">
-                                <label>Subcategory Title</label>
+                                <label>Sub-Category Title</label>
                                 @error('title') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
                             <div class="text-end">

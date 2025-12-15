@@ -83,7 +83,7 @@
                         <i class="ri-edit-box-line ri-20px text-info"></i>
                       </button>
 
-                      <button wire:click="destroy({{ $collection->id }})"
+                      <button wire:click="$dispatch('confirmDelete', { itemId: {{ $collection->id }} })"
                         class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect"
                         title="Delete">
                         <i class="ri-delete-bin-7-line ri-20px text-danger"></i>
@@ -169,3 +169,24 @@
   </div>
 
 </div>
+@section('page-script')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    window.addEventListener('confirmDelete', function (event) {
+        let itemId = event.detail.itemId;
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                @this.call('destroy', itemId); 
+            }
+        });
+    });
+</script>
+@endsection

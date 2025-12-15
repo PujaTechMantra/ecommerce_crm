@@ -12,4 +12,9 @@ class Collection extends Model
         'slug',
         'status',
     ];
+    
+    public function categories()
+    {
+        return $this->hasMany(Category::class);
+    }
 }

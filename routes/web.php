@@ -65,24 +65,24 @@ Route::middleware(['auth:admin', 'admin.maintenance'])->prefix('admin')->group(f
     // Dashboard and Customer Routes
     Route::get('dashboard', Dashboard::class)->name('admin.dashboard');
     Route::group(['prefix' => 'rider'], function () {
-        Route::get('add', CustomerAdd::class)->name('admin.customer.add')->middleware('check.permission');
-        Route::get('verification/list', CustomerIndex::class)->name('admin.customer.verification.list')->middleware('check.permission');
-        Route::get('engagement/list', RiderEngagement::class)->name('admin.customer.engagement.list')->middleware('check.permission');
-        Route::get('details/{id}', CustomerDetails::class)->name('admin.customer.details')->middleware('check.permission');
+        Route::get('add', CustomerAdd::class)->name('admin.customer.add');
+        Route::get('verification/list', CustomerIndex::class)->name('admin.customer.verification.list');
+        Route::get('engagement/list', RiderEngagement::class)->name('admin.customer.engagement.list');
+        Route::get('details/{id}', CustomerDetails::class)->name('admin.customer.details');
     });
 
     // Product Routes
     Route::group(['prefix' => 'models'], function () {
         Route::get('/collections', CollectionList::class)->name('admin.product.collections');
 
-        Route::get('/list', MasterProduct::class)->name('admin.product.index')->middleware('check.permission');
+        Route::get('/list', MasterProduct::class)->name('admin.product.index');
         Route::get('/categories', MasterCategory::class)->name('admin.product.categories');
         Route::get('/sub-categories', MasterSubCategory::class)->name('admin.product.sub_categories');
         Route::get('/keywords', MasterProductType::class)->name('admin.product.type');
-        Route::get('/new', AddProduct::class)->name('admin.product.add')->middleware('check.permission');
-        Route::get('/update/{productId}', UpdateProduct::class)->name('admin.product.update')->middleware('check.permission');
+        Route::get('/new', AddProduct::class)->name('admin.product.add');
+        Route::get('/update/{productId}', UpdateProduct::class)->name('admin.product.update');
         Route::get('/gallery/{product_id}', GalleryIndex::class)->name('admin.product.gallery');
-        Route::get('/subscriptions', MasterSubscription::class)->name('admin.model.subscriptions')->middleware('check.permission');
+        Route::get('/subscriptions', MasterSubscription::class)->name('admin.model.subscriptions');
     });
 
     Route::group(['prefix' => 'stock'], function () {
@@ -99,10 +99,10 @@ Route::middleware(['auth:admin', 'admin.maintenance'])->prefix('admin')->group(f
     });
 
     Route::group(['prefix' => 'vehicle'], function () {
-        Route::get('/list', VehicleList::class)->name('admin.vehicle.list')->middleware('check.permission');
-        Route::get('/create', VehicleCreate::class)->name('admin.vehicle.create')->middleware('check.permission');
-        Route::get('/update/{id}', VehicleUpdate::class)->name('admin.vehicle.update')->middleware('check.permission');
-        Route::get('/details/{vehicle_id}', VehicleDetail::class)->name('admin.vehicle.detail')->middleware('check.permission');
+        Route::get('/list', VehicleList::class)->name('admin.vehicle.list');
+        Route::get('/create', VehicleCreate::class)->name('admin.vehicle.create');
+        Route::get('/update/{id}', VehicleUpdate::class)->name('admin.vehicle.update');
+        Route::get('/details/{vehicle_id}', VehicleDetail::class)->name('admin.vehicle.detail');
         Route::get('/payment/summary/{vehicle_id}', VehiclePaymentSummary::class)->name('admin.vehicle.payment-summary');
     });
 
@@ -114,10 +114,10 @@ Route::middleware(['auth:admin', 'admin.maintenance'])->prefix('admin')->group(f
 
     // Payment Management
     Route::group(['prefix' => 'payment'], function () {
-        Route::get('/summary/{model_id?}/{vehicle_id?}', PaymentSummary::class)->name('admin.payment.summary')->middleware('check.permission');
-        Route::get('/vehicle/summary/{model_id?}/{vehicle_id?}', PaymentVehicleSummary::class)->name('admin.payment.vehicle.summary')->middleware('check.permission');
-        Route::get('/user-history/{user_id}', PaymentUserSummary::class)->name('admin.payment.user_history')->middleware('check.permission');
-        Route::get('/user/payment-history', UserPaymentHistory::class)->name('admin.payment.user_payment_history')->middleware('check.permission');
+        Route::get('/summary/{model_id?}/{vehicle_id?}', PaymentSummary::class)->name('admin.payment.summary');
+        Route::get('/vehicle/summary/{model_id?}/{vehicle_id?}', PaymentVehicleSummary::class)->name('admin.payment.vehicle.summary');
+        Route::get('/user-history/{user_id}', PaymentUserSummary::class)->name('admin.payment.user_history');
+        Route::get('/user/payment-history', UserPaymentHistory::class)->name('admin.payment.user_payment_history');
         Route::get('/refund-summary', RefundSummary::class)->name('admin.payment.refund.summary');
     });
 
@@ -128,19 +128,19 @@ Route::middleware(['auth:admin', 'admin.maintenance'])->prefix('admin')->group(f
 
     // Master Routes
     Route::group(['prefix' => 'master'], function () {
-        Route::get('/banner', BannerIndex::class)->name('admin.banner.index')->middleware('check.permission');
-        Route::get('/faq', FaqIndex::class)->name('admin.faq.index')->middleware('check.permission');
-        Route::get('/why-ewent', WhyEwentIndex::class)->name('admin.why-ewent')->middleware('check.permission');
-        Route::get('/policy-details', PolicyDetails::class)->name('admin.policy-details')->middleware('check.permission');
+        Route::get('/banner', BannerIndex::class)->name('admin.banner.index');
+        Route::get('/faq', FaqIndex::class)->name('admin.faq.index');
+        Route::get('/why-ewent', WhyEwentIndex::class)->name('admin.why-ewent');
+        Route::get('/policy-details', PolicyDetails::class)->name('admin.policy-details');
     });
 
     // Employee Management
     Route::group(['prefix' => 'employee'], function () {
-        Route::get('list', EmployeeManagementList::class)->name('admin.employee.list')->middleware('check.permission');
-        Route::get('create', EmployeeManagementCreate::class)->name('admin.employee.create')->middleware('check.permission');
-        Route::get('update/{id}', EmployeeManagementUpdate::class)->name('admin.employee.update')->middleware('check.permission');
-        Route::get('/designations', DesignationIndex::class)->name('admin.designation.index')->middleware('check.permission');
-        Route::get('/designation/permission/{id}', DesignationPermissionList::class)->name('admin.designation.permission')->middleware('check.permission');
+        Route::get('list', EmployeeManagementList::class)->name('admin.employee.list');
+        Route::get('create', EmployeeManagementCreate::class)->name('admin.employee.create');
+        Route::get('update/{id}', EmployeeManagementUpdate::class)->name('admin.employee.update');
+        Route::get('/designations', DesignationIndex::class)->name('admin.designation.index');
+        Route::get('/designation/permission/{id}', DesignationPermissionList::class)->name('admin.designation.permission');
     });
 
     // Location Management
@@ -150,10 +150,10 @@ Route::middleware(['auth:admin', 'admin.maintenance'])->prefix('admin')->group(f
     });
     // Organization Management
     Route::group(['prefix'=>'organization'], function (){
-        Route::get('/', AdminOrganizationIndex::class)->name('admin.organization.index')->middleware('check.permission');
-        Route::get('/invoices', AdminOrganizationInvoices::class)->name('admin.organization.invoice.list')->middleware('check.permission');
-        Route::get('/payments', AdminOrganizationPayments::class)->name('admin.organization.payment.list')->middleware('check.permission');
-        Route::get('{id}/dashboard/', AdminOrganizationDashboard::class)->name('admin.organization.dashboard')->middleware('check.permission');
+        Route::get('/', AdminOrganizationIndex::class)->name('admin.organization.index');
+        Route::get('/invoices', AdminOrganizationInvoices::class)->name('admin.organization.invoice.list');
+        Route::get('/payments', AdminOrganizationPayments::class)->name('admin.organization.payment.list');
+        Route::get('{id}/dashboard/', AdminOrganizationDashboard::class)->name('admin.organization.dashboard');
     });
     // Notification Management
     Route::group(['prefix'=>'notifications'], function (){
@@ -163,7 +163,7 @@ Route::middleware(['auth:admin', 'admin.maintenance'])->prefix('admin')->group(f
 
 
 // Organization Routes - Authenticated
-Route::middleware(['auth:organization'])->prefix('organization')->group(function () {
+Route::prefix('organization')->group(function () {
     Route::get('/', function () {
         return redirect()->route('organization.dashboard');
     });

@@ -14,9 +14,7 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('title');
-            $table->integer('collection_id');
             $table->string('slug')->nullable();
-            $table->string('image')->nullable();
             $table->tinyInteger('status')->default(1);
             $table->timestamp('deleted_at')->nullable();
             $table->timestamp('created_at')->nullable();

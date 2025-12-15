@@ -5,6 +5,7 @@ namespace App\Livewire\Product;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Models\Category;
+use App\Models\SubCategory;
 use App\Models\Collection;
 use Illuminate\Support\Str;
 
@@ -19,14 +20,23 @@ class MasterCategory extends Component
     public $existingImage;
 
     protected $messages = [
+        'title.unique' => 'This category already exists in the selected collection.',
         'collection_id.required' => 'Please select a collection.',
     ];
 
     protected function rules()
     {
         return [
-            'title' => 'required|max:255|unique:categories,title,' 
-                        . $this->categoryId . ',id,deleted_at,NULL',
+            'title' => [
+                'required',
+                'max:255',
+                \Illuminate\Validation\Rule::unique('categories')
+                    ->where(fn ($query) =>
+                        $query->where('collection_id', $this->collection_id)
+                            ->whereNull('deleted_at')
+                    )
+                    ->ignore($this->categoryId),
+            ],
 
             'image' => 'nullable|image|max:10240',
 
@@ -34,12 +44,12 @@ class MasterCategory extends Component
         ];
     }
 
-
     public function mount()
     {
-        $this->collections = Collection::where('status', 1)->get();
+        $this->collections = Collection::where('status', 1)
+                                    ->where('is_deleted', 0)
+                                    ->get();
     }
-
     public function render()
     {
         $this->categories = Category::with('collection')
@@ -116,12 +126,18 @@ class MasterCategory extends Component
 
     public function destroy($id)
     {
-        $cat = Category::findOrFail($id);
-        $cat->deleted_at = now();
-        $cat->save();
+        $category = Category::findOrFail($id);
+
+        $category->deleted_at = now();
+        $category->save();
+
+        // Soft delete all related subcategories manually
+        SubCategory::where('category_id', $id)
+            ->update(['deleted_at' => now()]);
 
         session()->flash('message', 'Category deleted successfully!');
     }
+
 
     public function resetForm()
     {

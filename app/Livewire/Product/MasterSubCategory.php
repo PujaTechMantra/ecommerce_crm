@@ -17,8 +17,11 @@ class MasterSubCategory extends Component
     
     public function mount()
     {
-        $this->categories = Category::where('status',1)->orderBy('title','ASC')->get(); // Load categories for dropdown
-        
+        $this->categories = Category::with('collection')
+            ->where('status', 1)
+            ->whereNull('deleted_at')
+            ->orderBy('title', 'ASC')
+            ->get();
     }
 
     public function store(){
@@ -109,9 +112,13 @@ class MasterSubCategory extends Component
         $subcategories = SubCategory::with('category')->paginate(5);
         // session()->flash('message', 'Data refreshed successfully!');
     }
+    
     public function render()
     {
-        $subcategories = SubCategory::with('category')->paginate(5);
-        return view('livewire.product.master-sub-category',['subcategories'=>$subcategories]);
+        
+        $subcategories = SubCategory::with('category.collection')->paginate(5);
+        return view('livewire.product.master-sub-category', [
+            'subcategories' => $subcategories
+        ]);
     }
 }

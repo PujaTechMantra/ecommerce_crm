@@ -6,6 +6,8 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use App\Models\Collection;
+use App\Models\Category;
+use App\Models\SubCategory;
 
 class CollectionList extends Component
 {
@@ -102,11 +104,36 @@ class CollectionList extends Component
         session()->flash('message', 'Status updated successfully.');
     }
 
+    // public function destroy($id)
+    // {
+    //     $c = Collection::findOrFail($id);
+    //     $c->is_deleted = 1;
+    //     $c->save();
+
+    //     session()->flash('message', 'Collection deleted successfully.');
+    // }
+
     public function destroy($id)
     {
-        $c = Collection::findOrFail($id);
-        $c->is_deleted = 1;
-        $c->save();
+        $collection = Collection::findOrFail($id);
+
+        // Soft delete the collection
+        $collection->is_deleted = 1;
+        $collection->save();
+
+        // Soft delete all categories under this collection
+        $categories = $collection->categories()->get();
+        foreach ($categories as $category) {
+            $category->deleted_at = now();
+            $category->save();
+
+            // Soft delete all subcategories under this category
+            $subcategories = $category->subcategories()->get();
+            foreach ($subcategories as $sub) {
+                $sub->deleted_at = now();
+                $sub->save();
+            }
+        }
 
         session()->flash('message', 'Collection deleted successfully.');
     }
