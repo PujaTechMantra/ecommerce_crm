@@ -18,12 +18,12 @@
                             <div class="col-lg-6 col-5 my-auto text-end">
                                 <div class="ms-md-auto d-flex align-items-center">
                                     <div class="ms-md-auto d-flex align-items-center mb-2">
-                                        <input type="text" wire:model.debounce.500ms="search" class="form-control border border-2 p-2 custom-input-sm" placeholder="Enter Title">
-                                        <button type="button" wire:target="search" class="btn btn-dark text-light mb-0 custom-input-sm">
-                                            <span class="material-icons">search</span>
-                                        </button>
+                                        <input type="text"
+                                            wire:model.live.debounce.500ms="search"
+                                            class="form-control border border-2 p-2 custom-input-sm"
+                                            placeholder="Enter Title">
+                                       
                                     </div>
-                                        <!-- Optionally, add a search icon button -->
                                     
                                 </div>
                             </div>
@@ -100,23 +100,33 @@
                             </div>
                          <form wire:submit.prevent="{{ $subCategoryId ? 'update' : 'store' }}">
                             <div class="form-floating form-floating-outline mb-4">
-                                <select wire:model="collection_id" class="form-control border border-2 p-2">
+                                <select
+                                    wire:model.live="collection_id"
+                                    wire:key="collection-select"
+                                    class="form-control border border-2 p-2"
+                                >
                                     <option value="">Select Collection</option>
                                     @foreach($collections as $collection)
                                         <option value="{{ $collection->id }}">{{ $collection->name }}</option>
                                     @endforeach
                                 </select>
+
                                 <label>Collection</label>
 
                             </div>
 
                             <div class="form-floating form-floating-outline">
-                                <select wire:model="category_id" class="form-control border border-2 p-2">
+                                <select
+                                    wire:model.live="category_id"
+                                    wire:key="category-select-{{ $collection_id }}"
+                                    class="form-control border border-2 p-2"
+                                >
                                     <option value="">Select Category</option>
                                     @foreach($categories as $category)
                                         <option value="{{ $category->id }}">{{ $category->title }}</option>
                                     @endforeach
                                 </select>
+
                                 <label>Category</label>
                                 @error('category_id') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>

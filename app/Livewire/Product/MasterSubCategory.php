@@ -35,6 +35,7 @@ class MasterSubCategory extends Component
 
    public function updatedCollectionId($value)
     {
+        $this->resetPage();
         $value = (int) $value;
         $this->category_id = null;
         $this->categories = Category::where('collection_id', $value)

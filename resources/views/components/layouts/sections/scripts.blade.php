@@ -40,6 +40,9 @@
 <script type="text/javascript" src="{{asset('build/assets/tagify-D6IG1b0s.js')}}"></script>
 <script type="text/javascript" src="{{asset('build/assets/main-DRGn0ueN.js')}}"></script> --}}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.ckeditor.com/ckeditor5/39.0.0/classic/ckeditor.js"></script>
+
 
 <!-- BEGIN: Page JS-->
 @yield('page-script')

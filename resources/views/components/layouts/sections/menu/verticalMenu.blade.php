@@ -143,6 +143,11 @@
               <div>Categories</div>
             </a>
           </li>
+           <li class="menu-item {{ (request()->is('admin/models/sub-categories*')) ? 'open' : '' }}">
+            <a href="{{route('admin.product.sub_categories')}}" class="menu-link">
+              <div>Sub Categories</div>
+            </a>
+          </li>
           <li class="menu-item {{ (request()->is('admin/models/colors*')) ? 'open' : '' }}">
             <a href="{{route('admin.product.colors')}}" class="menu-link">
               <div>Colors</div>

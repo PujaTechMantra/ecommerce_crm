@@ -100,7 +100,10 @@
                         <h6>Color List</h6>
                     </div>
                     <div class="col-md-6 text-end">
-                        <input type="text" wire:model.debounce.300ms="search" class="form-control w-50 d-inline" placeholder="Search...">
+                        <input type="text"
+                        wire:model.live.debounce.300ms="search"
+                        class="form-control w-50 d-inline"
+                        placeholder="Search...">
                     </div>
                 </div>
             </div>

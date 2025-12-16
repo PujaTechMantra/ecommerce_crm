@@ -73,7 +73,10 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h6>Size List</h6>
-                    <input type="text" wire:model.debounce.300ms="search" class="form-control w-50" placeholder="Search...">
+                    <input type="text"
+                        wire:model.live.debounce.300ms="search"
+                        class="form-control w-50"
+                        placeholder="Search...">
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
