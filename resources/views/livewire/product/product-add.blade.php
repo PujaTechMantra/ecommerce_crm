@@ -58,20 +58,24 @@
 
             <!-- Right Column -->
             <div class="col-lg-4">
-                <!-- Collection & Category -->
                 <div class="card mb-4">
                     <div class="card-header">
                         <h5 class="required">Main Image</h5>
                     </div>
                     <div class="card-body text-center">
-                        @if($image)
-                            <img src="{{ $image->temporaryUrl() }}" class="img-fluid mb-3" />
-                        @else
-                            <img src="{{ asset('backend/images/placeholder-image.jpg') }}" class="img-fluid mb-3" />
-                        @endif
-                        <input type="file" wire:model="image" class="form-control">
-                        @error('image') <span class="text-danger">{{ $message }}</span> @enderror
+                        <div class="w-100 product__thumb">
+                            <label for="main_image">
+                                <img id="main_image_preview" 
+                                    src="{{ $image ? $image->temporaryUrl() : asset('backend/images/placeholder-image.jpg') }}" 
+                                    class="img-fluid mb-3 border rounded" 
+                                    style="width:100%; max-height:100px; object-fit:cover;"/>
+                            </label>
+                            @error('image') <p class="small text-danger">{{ $message }}</p> @enderror
+                        </div>
+                        <input type="file" id="main_image" accept="image/*" wire:model="image" class="d-none" onchange="previewImage(event, 'main_image_preview')">
+                        <small>Image Size: 870px X 1160px</small>
                     </div>
+
                 </div>
 
                 <!-- Product Image -->
@@ -138,7 +142,7 @@
 
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="radio"
-                                wire:model.live="product_type"
+                                wire:model.live="product_type"  
                                 id="direct" value="direct">
                             <label class="form-check-label" for="direct">Direct Product</label>
                         </div>
@@ -176,9 +180,16 @@
                                 <label class="form-label">Image</label>
                                 <input type="file"
                                     wire:model="dir_image"
+                                    multiple
+                                    accept="image/*"
                                     class="form-control form-control-sm">
-                                    @error('dir_image') <span class="text-danger">{{ $message }}</span> @enderror
+                                    @error('dir_image.*') 
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                             </div>
+                        </div>
+
+                        <div class="row g-2">
 
                             <div class="col-md-8">
                                 <label class="form-label">Specification</label>
@@ -253,10 +264,17 @@
                             <div class="col-md-4">
                                 <label class="form-label required">Image</label>
                                 <input type="file"
-                                    wire:model="rows.{{ $index }}.image"
+                                    wire:model="rows.{{ $index }}.images"
+                                    multiple
+                                    accept="image/*"
                                     class="form-control form-control-sm">
-                                @error("rows.$index.image") <span class="text-danger">{{ $message }}</span> @enderror
+                                @error("rows.$index.images.*") 
+                                    <span class="text-danger">{{ $message }}</span> 
+                                @enderror
                             </div>
+                        </div>
+
+                        <div class="row g-2">
 
                             <div class="col-md-8">
                                 <label class="form-label">Specification</label>

@@ -55,22 +55,45 @@
             <div class="col-lg-4">
                 <!-- Main Image -->
                 <div class="card mb-4">
-                    <div class="card-header required">Main Image</div>
+                    <div class="card-header">
+                        <h5 class="required">Main Image</h5>
+                    </div>
+
                     <div class="card-body text-center">
-                        @if($image)
-                            <img src="{{ $image->temporaryUrl() }}" class="img-fluid mb-3 rounded border"
-                                style="width:100px; height:100px; object-fit:cover;">
-                        @elseif($product->image)
-                            <img src="{{ asset('storage/'.$product->image) }}" class="img-fluid mb-3 rounded border"
-                                style="width:100px; height:100px; object-fit:cover;">
-                        @else
-                            <img src="{{ asset('backend/images/placeholder-image.jpg') }}" class="img-fluid mb-3 rounded border"
-                                style="width:100px; height:100px; object-fit:cover;">
-                        @endif
-                        <input type="file" wire:model="image" class="form-control">
-                        @error('image') <span class="text-danger">{{ $message }}</span> @enderror
+                        <div class="w-100 product__thumb">
+                            <label for="main_image">
+                                <img
+                                    src="
+                                        @if($image)
+                                            {{ $image->temporaryUrl() }}
+                                        @elseif($product->image)
+                                            {{ asset('storage/'.$product->image) }}
+                                        @else
+                                            {{ asset('backend/images/placeholder-image.jpg') }}
+                                        @endif
+                                    "
+                                    class="img-fluid mb-3 border rounded"
+                                    style="width:100%; max-height:120px; object-fit:cover; cursor:pointer;"
+                                />
+                            </label>
+
+                            @error('image')
+                                <p class="small text-danger">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <input
+                            type="file"
+                            id="main_image"
+                            accept="image/*"
+                            wire:model="image"
+                            class="d-none"
+                        >
+
+                        <small>Image Size: 870px × 1160px</small>
                     </div>
                 </div>
+
 
                 <!-- Collection / Category / Subcategory -->
                 <div class="card mb-4">
@@ -117,22 +140,38 @@
             <div class="card-body">
                 <label class="form-label required">Product Type</label>
                 <div>
+                    @php
+                        $disableProductType = $product->items->count() > 0;
+                    @endphp
                     <div class="form-check form-check-inline">
-                        <input type="radio" wire:model.live="product_type" id="variation" value="variation" class="form-check-input">
+                       <input type="radio"
+                            wire:model="product_type"
+                            id="variation"
+                            value="variation"
+                            class="form-check-input"
+                            @disabled($disableProductType)>
                         <label for="variation" class="form-check-label">Variation Product</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input type="radio" wire:model.live="product_type" id="direct" value="direct" class="form-check-input">
+                       <input type="radio"
+                            wire:model="product_type"
+                            id="direct"
+                            value="direct"
+                            class="form-check-input"
+                            @disabled($disableProductType)>
+                           
                         <label for="direct" class="form-check-label">Direct Product</label>
                     </div>
+                   
                 </div>
-                @error('product_type') <span class="text-danger">{{ $message }}</span> @enderror
+                 @error('product_type') <span class="text-danger">{{ $message }}</span> @enderror
             </div>
+               
         </div>
 
         <!-- Direct Product Form -->
         @if($product_type === 'direct')
-            <div class="card mb-4">
+            <div wire:key="product-type-direct" class="card mb-4">
                 <div class="card-body">
                     <div class="row g-2 mb-2">
                         <div class="col-md-6">
@@ -150,22 +189,32 @@
                     <div class="row g-2 mb-2">
                         <div class="col-md-4">
                             <label>Image</label>
-                            <input type="file" wire:model="dir_image" class="form-control">
-                            {{-- New image preview --}}
-                            @if ($dir_image)
-                                <img src="{{ $dir_image->temporaryUrl() }}"
-                                    class="img-fluid mb-3 rounded border"
-                                    style="width:100px; height:100px; object-fit:cover;">
-                            @endif
+                            <input type="file" wire:model="dir_image" multiple accept="image/*" class="form-control">
+                                {{-- New uploads preview --}}
+                                @if($dir_image)
+                                    <div class="d-flex flex-wrap gap-2 mt-2">
+                                        @foreach($dir_image as $img)
+                                            <img src="{{ $img->temporaryUrl() }}"
+                                                class="border rounded"
+                                                style="width:80px;height:80px;object-fit:cover;">
+                                        @endforeach
+                                    </div>
+                                @endif
 
-                            {{-- Old image preview --}}
-                            @if (!$dir_image && $existing_dir_image)
-                                <img src="{{ asset('storage/'.$existing_dir_image) }}"
-                                    class="img-fluid mb-3 rounded border"
-                                    style="width:100px; height:100px; object-fit:cover;">
-                            @endif
+                                {{-- Existing images --}}
+                                @if(!$dir_image && !empty($existing_dir_images))
+                                    <div class="d-flex flex-wrap gap-2 mt-2">
+                                        @foreach($existing_dir_images as $img)
+                                            <img src="{{ asset('storage/'.$img) }}"
+                                                class="border rounded"
+                                                style="width:80px;height:80px;object-fit:cover;">
+                                        @endforeach
+                                    </div>
+                                @endif
 
-                            @error('dir_image') <span class="text-danger">{{ $message }}</span> @enderror
+                            @error('dir_image.*') 
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
                         </div>
                     </div>
 
@@ -186,7 +235,7 @@
 
         <!-- Variation Product Form -->
         @if($product_type === 'variation')
-            <div class="card mb-4">
+            <div wire:key="product-type-variation" class="card mb-4">
                 <div class="card-body">
                     @foreach($rows as $index => $row)
                         <div class="border p-3 mb-3 position-relative">
@@ -226,10 +275,14 @@
                             <div class="row g-2 mb-2">
                                 <div class="col-md-4">
                                     <label class="form-label required">Image</label>
-                                    <input type="file" wire:model="rows.{{ $index }}.image" class="form-control">
-                                    @if(!empty($row['existing_image']))
-                                        <img src="{{ asset('storage/'.$row['existing_image']) }}" class="img-fluid mb-3 rounded border"
-                                            style="width:100px; height:100px; object-fit:cover;">
+                                    <!-- <input type="file" wire:model="rows.{{ $index }}.image" class="form-control"> -->
+                                    <input type="file" wire:model="rows.{{ $index }}.images" class="form-control" multiple>
+                                    @if(!empty($row['existing_images']))
+                                        @foreach($row['existing_images'] as $img)
+                                            <img src="{{ asset('storage/'.$img) }}"
+                                                class="rounded border me-1 mb-1"
+                                                style="width:70px;height:70px;object-fit:cover;">
+                                        @endforeach
                                     @endif
                                     @error("rows.$index.image") <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>

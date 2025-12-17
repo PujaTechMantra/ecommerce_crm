@@ -79,10 +79,12 @@ class Product extends Model
     public function payment_item(){
         return $this->hasMany(PaymentItem::class, 'product_id', 'id');
     }
-    public function ProductImages()
+    
+    public function images()
     {
         return $this->hasMany(ProductImage::class);
     }
+    
     
     // public function types()
     // {

@@ -10,14 +10,19 @@ class ProductImage extends Model
     use HasFactory;
 
     protected $fillable = [
-        'product_id',  // The ID of the product this image belongs to
+        'product_item_id',  // The ID of the product this image belongs to
         'image',       // The file path of the image
     ];
 
     // Define the relationship with the Product model
-    public function product()
+    // public function product()
+    // {
+    //     return $this->belongsTo(Product::class);
+    // }
+
+    public function item()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(ProductItem::class, 'product_item_id');
     }
 }
 

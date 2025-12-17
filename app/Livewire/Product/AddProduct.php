@@ -6,6 +6,7 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Models\Product;
 use App\Models\ProductItem;
+use App\Models\ProductImage;
 use App\Models\Collection;
 use App\Models\Category;
 use App\Models\SubCategory;
@@ -39,7 +40,7 @@ class AddProduct extends Component
     public $only_for;
 
     public $image;
-    public $dir_image;
+    public $dir_image = [];
 
     public $product_type = '';
 
@@ -56,7 +57,7 @@ class AddProduct extends Component
             'size_id' => '',
             'base_price' => '',
             'display_price' => '',
-            'image' => null,
+            'images' => [],
             'specification' => '',
         ]
     ];
@@ -183,39 +184,53 @@ class AddProduct extends Component
         /** DIRECT PRODUCT **/
         if ($this->product_type === 'direct') {
 
-            $directImagePath = $this->dir_image
-                ? $this->dir_image->store('product-items', 'public')
-                : $mainImagePath;
-
-            ProductItem::create([
+            $item = ProductItem::create([
                 'product_id' => $product->id,
                 'product_type' => 1,
                 'base_price' => $this->base_price,
                 'display_price' => $this->display_price,
-                'image' => $directImagePath,
                 'specification' => $this->specification,
             ]);
+
+            // SAVE MULTIPLE DIRECT IMAGES
+            if (!empty($this->dir_image)) {
+                foreach ($this->dir_image as $file) {
+                    $path = $file->store('product-images', 'public');
+
+                    ProductImage::create([
+                        'product_item_id' => $item->id,
+                        'image'           => $path,
+                    ]);
+                }
+            }
         }
 
         /** VARIATION PRODUCT **/
         if ($this->product_type === 'variation') {
-            foreach ($this->rows as $row) {
-                $imagePath = null;
+           foreach ($this->rows as $row) {
 
-                if (!empty($row['image'])) {
-                    $imagePath = $row['image']->store('product-items', 'public');
-                }
-
-                ProductItem::create([
-                    'product_id' => $product->id,
-                    'product_type' => 2,
-                    'color_id' => $row['color_id'],
-                    'size_id' => $row['size_id'],
-                    'base_price' => $row['base_price'],
-                    'display_price' => $row['display_price'],
-                    'image' => $imagePath,
-                    'specification' => $row['specification'],
+                $item = ProductItem::create([
+                    'product_id'     => $product->id,
+                    'product_type'   => 2,
+                    'color_id'       => $row['color_id'],
+                    'size_id'        => $row['size_id'],
+                    'base_price'     => $row['base_price'],
+                    'display_price'  => $row['display_price'],
+                    'specification'  => $row['specification'],
                 ]);
+
+                // SAVE MULTIPLE IMAGES
+                if (!empty($row['images'])) {
+                    foreach ($row['images'] as $file) {
+
+                        $path = $file->store('product-images', 'public');
+
+                        ProductImage::create([
+                            'product_item_id' => $item->id, //
+                            'image'           => $path,
+                        ]);
+                    }
+                }
             }
         }
 
@@ -255,7 +270,8 @@ class AddProduct extends Component
         if ($this->product_type === 'direct') {
             $rules['base_price']    = 'required|numeric|min:0';
             $rules['display_price'] = 'required|numeric|min:0';
-            $rules['dir_image'] = 'nullable|image|max:2048';
+            $rules['dir_image'] = 'nullable|array|min:1';
+            $rules['dir_image.*'] = 'image|max:2048';
         }
 
         // VARIATION PRODUCT
@@ -265,9 +281,8 @@ class AddProduct extends Component
                 $rules["rows.$index.size_id"]       = 'required';
                 $rules["rows.$index.base_price"]    = 'required|numeric|min:0';
                 $rules["rows.$index.display_price"] = 'required|numeric|min:0';
-                $rules["rows.$index.image"] = $this->product
-                                            ? 'nullable|image|max:2048'
-                                            : 'required|image|max:2048';
+                $rules["rows.$index.images"] = 'required|array|min:1';
+                $rules["rows.$index.images.*"] = 'image|max:2048';
             }
         }
 
