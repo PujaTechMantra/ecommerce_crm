@@ -1,77 +1,133 @@
 <div class="content-wrapper">
+            
     <div class="container-xxl flex-grow-1 container-p-y">
-          
-        <!-- Product List Table -->
+            <div class="col-lg-12 justify-content-left">
+                    <div class="row">
+                        @if(session()->has('message'))
+                        <div class="alert alert-success" id="flashMessage">
+                            {{ session('message') }}
+                        </div>
+                        @endif
+
+                    </div>
+                </div>
+            <div class="col-lg-12 d-flex justify-content-end mb-3">
+                <a href="{{ route('admin.product.add') }}" class="btn btn-primary">
+                    <i class="ri-add-line ri-16px me-1"></i> Add Product
+                </a>
+            </div>
         <div class="card">
-            <div class="card-datatable table-responsive">
-                <div class="card-header border-bottom">
-                    <h5 class="mb-0">Filter</h5>
-                    <div class="d-flex justify-content-between align-items-center row pt-4 gap-4 gap-md-0">
-                        <div class="col-md-4 product_status"></div>
-                        <div class="col-md-4 product_category"></div>
-                        <div class="col-md-4 product_stock"></div>
-                    </div>
-                    <div class="d-md-flex justify-content-between align-items-center dt-layout-start col-md-auto me-auto mt-0">
-                        <div class="dt-search mb-0 mb-md-5">
-                            <input type="search" class="form-control form-control-sm ms-0" id="dt-search-0" placeholder="Search" aria-controls="DataTables_Table_0">
-                            <label for="dt-search-0"></label>
-                        </div>
-                    </div>
-                    <div class="d-md-flex justify-content-between align-items-center dt-layout-end col-md-auto ms-auto gap-md-2 gap-0 mt-0">
-                        <!-- <div class="dt-length">
-                            <select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0" class="form-select form-select-sm" id="dt-length-0">
-                                <option value="7">7</option>
-                                <option value="10">10</option>
-                                <option value="25">25</option>
-                                <option value="50">50</option>
-                                <option value="100">100</option>
-                            </select><label for="dt-length-0">
+            <div class="card-header">
+                <h5>Filter</h5>
+                <div class="row g-2">
+                
 
-                            </label>
-                        </div> -->
-                        <div class="dt-buttons btn-group flex-wrap mb-md-0 mb-5"> 
-                            <div class="btn-group">
-                                <button class="btn buttons-collection btn-outline-secondary dropdown-toggle me-4 waves-effect" tabindex="0" aria-controls="DataTables_Table_0" type="button" aria-haspopup="dialog" aria-expanded="false">
-                                    <span>
-                                        <span class="d-flex align-items-center">
-                                            <i class="icon-base ri ri-download-line icon-16px me-sm-2"></i> 
-                                            <span class="d-none d-sm-inline-block">Export</span>
-                                        </span>
-                                    </span>
-                                </button>
-                            </div> 
-                            <a href="{{ route('admin.product.add') }}" 
-                                class="btn add-new btn-primary">
-                                    <span>
-                                        <i class="icon-base ri ri-add-line me-0 me-sm-1 icon-16px"></i>
-                                        <span class="d-none d-sm-inline-block">Add Product</span>
-                                    </span>
-                                </a>
+                    <div class="col-md-3">
+                        <label>Collection</label>
+                        <select wire:model.live="collection_id" class="form-select">
+                            <option value="">All</option>
+                            @foreach($collections as $c)
+                                <option value="{{ $c->id }}">{{ $c->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
 
-                        </div>
+                    <div class="col-md-3">
+                        <label>Category</label>
+                        <select wire:model.live="cat_id" class="form-select">
+                            <option value="">All</option>
+                            @foreach($categories as $cat)
+                                <option value="{{ $cat->id }}">{{ $cat->title }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Sub Category</label>
+                        <select wire:model.live="sub_cat_id" class="form-select">
+                            <option value="">All</option>
+                            @foreach($subCategories as $subCat)
+                                <option value="{{ $subCat->id }}">{{ $subCat->title }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label></label>
+                        <input type="text" wire:model.live.debounce.500ms="keyword" class="form-control" placeholder="Search">
                     </div>
                 </div>
             </div>
 
-            <div class="card-datatable table-responsive">
-                <table class="datatables-products table">
+            <div class="card-body table-responsive">
+                <table class="table">
                     <thead>
                         <tr>
-                        <th></th>
-                        <th></th>
-                        <th>product</th>
-                        <th>category</th>
-                        <th>stock</th>
-                        <th>sku</th>
-                        <th>price</th>
-                        <th>qty</th>
-                        <th>status</th>
-                        <th>actions</th>
+                            <th>#</th>
+                            <th>Product</th>
+                            <th>Collection</th>
+                            <th>Category</th>
+                            <th>Sub-Category</th>
+                            <th>Status</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
+                    <tbody>
+                        @forelse($products as $index => $product)
+                        <tr>
+                            <td>{{ $products->firstItem() + $index }}</td>
+                            <td>{{ $product->title }}</td>
+                            <td>{{ $product->collection->name ?? '' }}</td>
+                            <td>{{ $product->category->title ?? '' }}</td>
+                            <td>{{ $product->subCategory->title ?? '' }}</td>
+                            <td>
+                                <div class="form-check form-switch">
+                                    <input
+                                        class="form-check-input ms-auto"
+                                        type="checkbox"
+                                        id="flexSwitchCheckDefault{{ $product->id }}"
+                                        wire:click="toggleStatus({{ $product->id }})"
+                                        @if($product->status) checked @endif>
+                                </div>
+                            </td>
+                            <td>
+                                <a href="{{ route('admin.product.edit', $product->id) }}"
+                                    class="btn btn-sm">
+                                        <i class="ri-edit-box-line text-info"></i>
+                                    </a>
+                                <button class="btn btn-sm" wire:click="$dispatch('confirmDelete', { itemId: {{ $product->id }} })"><i class="ri-delete-bin-line text-danger"></i></button>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="6" class="text-center">No products found</td>
+                        </tr>
+                        @endforelse
+                    </tbody>
                 </table>
+
+                {{ $products->links() }}
             </div>
         </div>
     </div>
-
 </div>
+@section('page-script')
+<script>
+    window.addEventListener('confirmDelete', function (event) {
+        let itemId = event.detail.itemId;
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                @this.call('destroy', itemId); 
+            }
+        });
+    });
+
+</script>
+@endsection

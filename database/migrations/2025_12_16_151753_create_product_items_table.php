@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('product_items', function (Blueprint $table) {
             $table->id();
-            $table->tinyInteger('product_type')->comment('1 = Variation, 2 = Direct');
+            $table->unsignedBigInteger('product_id')->nullable();
+            $table->tinyInteger('product_type')->comment('1 = Direct, 2 = Variation');
             $table->unsignedBigInteger('color_id')->nullable();
             $table->unsignedBigInteger('size_id')->nullable();
             $table->decimal('base_price', 10, 2);

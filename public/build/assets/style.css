@@ -37,6 +37,11 @@
     left: 50%;
     transform: translate(-50%, -50%);
 }
+    .required::after {
+        content: " *";
+        color: #dc3545; /* Bootstrap danger red */
+        font-weight: bold;
+    }
 
 @keyframes spin {
     from {

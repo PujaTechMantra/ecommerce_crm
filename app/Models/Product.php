@@ -16,10 +16,13 @@ class Product extends Model
         'types',
         'short_desc',
         'long_desc',
+        'collection_id',
         'category_id',
         'sub_category_id',
         'image',
         'status',
+        'slug',
+        'product_type',
         'is_featured',
         'is_new_arrival',
         'is_bestseller',
@@ -38,6 +41,11 @@ class Product extends Model
         return env('DEFAULT_RENT_DURATION', 30);
     }
 
+    public function collection()
+    {
+        return $this->belongsTo(Collection::class, 'collection_id');
+    }
+
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id');
@@ -46,6 +54,11 @@ class Product extends Model
     public function subCategory()
     {
         return $this->belongsTo(SubCategory::class, 'sub_category_id');
+    }
+
+    public function items()
+    {
+        return $this->hasMany(ProductItem::class);
     }
 
     public function stock()
