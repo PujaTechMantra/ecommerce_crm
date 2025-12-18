@@ -76,9 +76,9 @@
                         <tr>
                             <td>{{ $products->firstItem() + $index }}</td>
                             <td>{{ $product->title }}</td>
-                            <td>{{ $product->collection->name ?? '' }}</td>
-                            <td>{{ $product->category->title ?? '' }}</td>
-                            <td>{{ $product->subCategory->title ?? '' }}</td>
+                            <td>{{ $product->collection->name ?? 'NA' }}</td>
+                            <td>{{ $product->category->title ?? 'NA' }}</td>
+                            <td>{{ $product->subCategory->title ?? 'NA' }}</td>
                             <td>
                                 <div class="form-check form-switch">
                                     <input

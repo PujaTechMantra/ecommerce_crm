@@ -42,6 +42,8 @@ class EditProduct extends Component
     public $subcategories = [];
     public $colors = [];
     public $sizes = [];
+    public $removed_direct_images = [];
+    public $removed_variation_images = [];
 
     public function mount($productId)
     {
@@ -119,15 +121,40 @@ class EditProduct extends Component
             'size_id' => '',
             'base_price' => '',
             'display_price' => '',
-            'image' => null,
             'specification' => '',
+            'images' => [],
+            'existing_images' => [],
         ];
         $this->dispatch('init-editors');
     }
 
+    public function removeDirectImage($index)
+    {
+        $this->removed_direct_images[] = $this->existing_dir_images[$index];
+        unset($this->existing_dir_images[$index]);
+        $this->existing_dir_images = array_values($this->existing_dir_images);
+    }
+
+    public function removeVariationImage($rowIndex, $imgIndex)
+    {
+        $this->removed_variation_images[$rowIndex][] =
+            $this->rows[$rowIndex]['existing_images'][$imgIndex];
+
+        unset($this->rows[$rowIndex]['existing_images'][$imgIndex]);
+        $this->rows[$rowIndex]['existing_images'] =
+            array_values($this->rows[$rowIndex]['existing_images']);
+    }
+
+
     // Remove variation row
     public function removeRow($index)
     {
+        if (!empty($this->rows[$index]['existing_images'])) {
+            foreach ($this->rows[$index]['existing_images'] as $img) {
+                $this->removed_variation_images[$index][] = $img;
+            }
+        }
+
         unset($this->rows[$index]);
         $this->rows = array_values($this->rows);
     }
@@ -154,8 +181,8 @@ class EditProduct extends Component
                     'base_price' => $item->base_price,
                     'display_price' => $item->display_price,
                     'specification' => $item->specification,
-                    'image' => null,
-                    'existing_image' => $item->image,
+                    'images' => [],
+                    'existing_images' => $item->images->pluck('image')->toArray(),
                 ];
             })->toArray();
         }
@@ -204,23 +231,25 @@ class EditProduct extends Component
             ]);
 
             // SAVE MULTIPLE IMAGES
-            if (!empty($this->dir_image)) {
-
-                // Optional: delete old images
-                foreach ($directItem->images as $img) {
-                    Storage::disk('public')->delete($img->image);
-                    $img->delete();
+                foreach ($this->removed_direct_images as $img) {
+                    $image = ProductImage::where('image', $img)->first();
+                    if ($image) {
+                        Storage::disk('public')->delete($image->image);
+                        $image->delete();
+                    }
                 }
 
-                foreach ($this->dir_image as $file) {
-                    $path = $file->store('product-images', 'public');
+                //  Upload new images (only if present)
+                if (!empty($this->dir_image)) {
+                    foreach ($this->dir_image as $file) {
+                        $path = $file->store('product-images', 'public');
 
-                    ProductImage::create([
-                        'product_item_id' => $directItem->id,
-                        'image'           => $path,
-                    ]);
+                        ProductImage::create([
+                            'product_item_id' => $directItem->id,
+                            'image'           => $path,
+                        ]);
+                    }
                 }
-            }
 
         } else {
 
@@ -228,6 +257,16 @@ class EditProduct extends Component
             ProductItem::where('product_id', $this->product->id)
                 ->where('product_type', 1)
                 ->delete();
+
+                foreach ($this->removed_variation_images as $rowImages) {
+                    foreach ($rowImages as $img) {
+                        $image = ProductImage::where('image', $img)->first();
+                        if ($image) {
+                            Storage::disk('public')->delete($image->image);
+                            $image->delete();
+                        }
+                    }
+                }
 
                     // Variation products: handle each row
                 foreach ($this->rows as $row) {
@@ -245,6 +284,9 @@ class EditProduct extends Component
                             'specification'  => $row['specification'],
                         ]
                     );
+
+                   
+
 
                     // SAVE MULTIPLE IMAGES (product_id)
                     if (!empty($row['images'])) {

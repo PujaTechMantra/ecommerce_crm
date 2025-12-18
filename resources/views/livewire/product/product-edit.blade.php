@@ -203,14 +203,24 @@
 
                                 {{-- Existing images --}}
                                 @if(!$dir_image && !empty($existing_dir_images))
-                                    <div class="d-flex flex-wrap gap-2 mt-2">
-                                        @foreach($existing_dir_images as $img)
+                                <div class="d-flex flex-wrap gap-2 mt-2">
+                                    @foreach($existing_dir_images as $index => $img)
+                                        <div class="position-relative">
                                             <img src="{{ asset('storage/'.$img) }}"
                                                 class="border rounded"
                                                 style="width:80px;height:80px;object-fit:cover;">
-                                        @endforeach
-                                    </div>
-                                @endif
+
+                                            <button type="button"
+                                                    wire:click="removeDirectImage({{ $index }})"
+                                                    class="btn btn-danger btn-sm position-absolute top-0 end-0"
+                                                    style="padding:2px 6px;">
+                                                ✕
+                                            </button>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @endif
+
 
                             @error('dir_image.*') 
                                 <span class="text-danger">{{ $message }}</span>
@@ -278,13 +288,25 @@
                                     <!-- <input type="file" wire:model="rows.{{ $index }}.image" class="form-control"> -->
                                     <input type="file" wire:model="rows.{{ $index }}.images" class="form-control" multiple>
                                     @if(!empty($row['existing_images']))
-                                        @foreach($row['existing_images'] as $img)
-                                            <img src="{{ asset('storage/'.$img) }}"
-                                                class="rounded border me-1 mb-1"
-                                                style="width:70px;height:70px;object-fit:cover;">
+                                    <div class="d-flex flex-wrap gap-2">
+                                        @foreach($row['existing_images'] as $imgIndex => $img)
+                                            <div class="position-relative">
+                                                <img src="{{ asset('storage/'.$img) }}"
+                                                    class="rounded border"
+                                                    style="width:70px;height:70px;object-fit:cover;">
+
+                                                <button type="button"
+                                                        wire:click="removeVariationImage({{ $index }}, {{ $imgIndex }})"
+                                                        class="btn btn-danger btn-sm position-absolute top-0 end-0"
+                                                        style="padding:2px 6px;">
+                                                    ✕
+                                                </button>
+                                            </div>
                                         @endforeach
-                                    @endif
-                                    @error("rows.$index.image") <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
+                                @endif
+
+                                    @error("rows.$index.images") <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
                             </div>
 
