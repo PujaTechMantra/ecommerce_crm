@@ -8,14 +8,14 @@
           <!-- Logo -->
           <div class="app-brand justify-content-center mt-5">
             <a href="{{ url('/') }}" class="app-brand-link gap-3">
-              <span class="app-brand-text demo text-heading fw-semibold">Admin / Organization</span>
+              <span class="app-brand-text demo text-heading fw-semibold">Admin</span>
             </a>
           </div>
           <!-- /Logo -->
   
           <div class="card-body mt-1">
-            <h4 class="mb-1">Welcome to Ewent! 👋🏻</h4>
-            <p class="mb-5">Please sign-in to your account and start the adventure</p>
+            <h4 class="mb-1">Welcome to E-CRM! 👋🏻</h4>
+            <p class="mb-5">Please sign-in to your account</p>
   
             <form wire:submit.prevent="login" class="mb-5">
               @if(session()->has('message'))

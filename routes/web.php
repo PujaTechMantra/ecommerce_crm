@@ -72,20 +72,27 @@ Route::middleware(['auth:admin', 'admin.maintenance'])->prefix('admin')->group(f
         Route::get('details/{id}', CustomerDetails::class)->name('admin.customer.details');
     });
 
-    // Product Routes
-    Route::group(['prefix' => 'models'], function () {
+      // Product Routes
+    Route::group(['prefix' => 'master'], function () {
         Route::get('/collections', CollectionList::class)->name('admin.product.collections');
-
-        Route::get('/list', ProductList::class)->name('admin.product.index');
         Route::get('/categories', MasterCategory::class)->name('admin.product.categories');
         Route::get('/sub-categories', MasterSubCategory::class)->name('admin.product.sub_categories');
         Route::get('/colors', ColorList::class)->name('admin.product.colors');
         Route::get('/sizes', SizeList::class)->name('admin.product.sizes');
-        
-        Route::get('/keywords', MasterProductType::class)->name('admin.product.type');
+        Route::get('/list', ProductList::class)->name('admin.product.index');
         Route::get('/new', AddProduct::class)->name('admin.product.add');
         Route::get('/edit/{productId}', EditProduct::class)->name('admin.product.edit');
-        Route::get('/gallery/{product_id}', GalleryIndex::class)->name('admin.product.gallery');
+
+        Route::get('/banner', BannerIndex::class)->name('admin.banner.index');
+        Route::get('/faq', FaqIndex::class)->name('admin.faq.index');
+        Route::get('/why-ewent', WhyEwentIndex::class)->name('admin.why-ewent');
+        Route::get('/policy-details', PolicyDetails::class)->name('admin.policy-details');
+    });
+
+    // Product Routes
+    Route::group(['prefix' => 'models'], function () {
+        Route::get('/keywords', MasterProductType::class)->name('admin.product.type');
+        Route::get('/new', AddProduct::class)->name('admin.product.add');
         Route::get('/subscriptions', MasterSubscription::class)->name('admin.model.subscriptions');
     });
 
@@ -130,13 +137,6 @@ Route::middleware(['auth:admin', 'admin.maintenance'])->prefix('admin')->group(f
         Route::get('/list', OfferIndex::class)->name('admin.offer.list');
     });
 
-    // Master Routes
-    Route::group(['prefix' => 'master'], function () {
-        Route::get('/banner', BannerIndex::class)->name('admin.banner.index');
-        Route::get('/faq', FaqIndex::class)->name('admin.faq.index');
-        Route::get('/why-ewent', WhyEwentIndex::class)->name('admin.why-ewent');
-        Route::get('/policy-details', PolicyDetails::class)->name('admin.policy-details');
-    });
 
     // Employee Management
     Route::group(['prefix' => 'employee'], function () {

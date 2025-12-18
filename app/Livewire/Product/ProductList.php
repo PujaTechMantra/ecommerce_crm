@@ -16,6 +16,8 @@ class ProductList extends Component
 {
     use WithPagination;
 
+    protected $paginationTheme = 'bootstrap';
+
     public $collection_id;
     public $cat_id;
     public $sub_cat_id;
@@ -74,7 +76,7 @@ class ProductList extends Component
             $query->where('category_id', $this->cat_id);
         }
         if ($this->sub_cat_id) {
-            $query->where('category_id', $this->sub_cat_id);
+            $query->where('sub_category_id', $this->sub_cat_id);
         }
 
         if ($this->keyword) {

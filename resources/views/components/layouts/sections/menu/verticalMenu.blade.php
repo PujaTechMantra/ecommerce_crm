@@ -7,7 +7,7 @@
         @include('_partials.macros',["height"=>20])
       </span> --}}
       <img src="{{asset('assets/img/new-logo.png')}}" alt="" style="width: 80px; height: auto;">
-      <span class="app-brand-text demo menu-text fw-semibold ms-2">Ewent</span>
+      <span class="app-brand-text demo menu-text fw-semibold ms-2">E-CRM</span>
     </a>
 
     <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto">
@@ -19,18 +19,51 @@
 
   <ul class="menu-inner py-1 ps">
     <li class="menu-header">Management</li>
-    <li class="menu-item {{ (request()->is('admin/dashboard*')) ? 'open' : '' }}">
-      <a href="{{route('admin.dashboard')}}" class="menu-link">
-        <i class="menu-icon tf-icons ri-home-smile-line"></i>
-        <div>Dashboards</div>
-      </a>
-    </li>
+      <li class="menu-item {{ (request()->is('admin/dashboard*')) ? 'open' : '' }}">
+        <a href="{{route('admin.dashboard')}}" class="menu-link">
+          <i class="menu-icon tf-icons ri-home-smile-line"></i>
+          <div>Dashboards</div>
+        </a>
+      </li>
           <li class="menu-item {{ (request()->is('admin/master*')) ? 'open' : '' }}">
             <a href="#" class="menu-link menu-toggle waves-effect" target="_blank">
               <i class="menu-icon tf-icons ri-stock-line"></i>
               <div>Master Management</div>
             </a>
             <ul class="menu-sub">
+              <li class="menu-item {{ (request()->is('admin/master/collections*')) ? 'open' : '' }}">
+                <a href="{{route('admin.product.collections')}}" class="menu-link">
+                  <div>Collections</div>
+                </a>
+              </li>
+              <li class="menu-item {{ (request()->is('admin/master/categories*')) ? 'open' : '' }}">
+                <a href="{{route('admin.product.categories')}}" class="menu-link">
+                  <div>Categories</div>
+                </a>
+              </li>
+              <li class="menu-item {{ (request()->is('admin/master/sub-categories*')) ? 'open' : '' }}">
+                <a href="{{route('admin.product.sub_categories')}}" class="menu-link">
+                  <div>Sub Categories</div>
+                </a>
+              </li>
+              <li class="menu-item {{ (request()->is('admin/master/colors*')) ? 'open' : '' }}">
+                <a href="{{route('admin.product.colors')}}" class="menu-link">
+                  <div>Colors</div>
+                </a>
+              </li>
+              <li class="menu-item {{ (request()->is('admin/master/sizes*')) ? 'open' : '' }}">
+                <a href="{{route('admin.product.sizes')}}" class="menu-link">
+                  <div>Sizes</div>
+                </a>
+              </li>
+              
+              <li class="menu-item {{ (request()->is('admin/master/list*')) ? 'open' : '' }}">
+                <a href="{{route('admin.product.index')}}" class="menu-link">
+                  <div>Products</div>
+                </a>
+              </li>
+            </ul>
+            <!-- <ul class="menu-sub">
               <li class="menu-item {{ (request()->is('admin/master/banner*')) ? 'open' : '' }}">
                 <a href="{{route('admin.banner.index')}}" class="menu-link">
                   <div>Banner</div>
@@ -51,7 +84,7 @@
                   <div>Policy Details</div>
                 </a>
               </li>
-            </ul>
+            </ul> -->
           </li>
         <li class="menu-item {{ (request()->is('admin/employee*')) ? 'open' : '' }}">
           <a href="#" class="menu-link menu-toggle waves-effect" target="_blank">
@@ -130,40 +163,9 @@
       <li class="menu-item {{ (request()->is('admin/models*')) ? 'open' : '' }}" style="">
         <a href="#" class="menu-link menu-toggle waves-effect" target="_blank">
           <i class="menu-icon tf-icons ri-product-hunt-line"></i>
-          <div>Master Management</div>
+          <div>Model Management</div>
         </a>
         <ul class="menu-sub">
-           <li class="menu-item {{ (request()->is('admin/models/collections*')) ? 'open' : '' }}">
-            <a href="{{route('admin.product.collections')}}" class="menu-link">
-              <div>Collections</div>
-            </a>
-          </li>
-          <li class="menu-item {{ (request()->is('admin/models/categories*')) ? 'open' : '' }}">
-            <a href="{{route('admin.product.categories')}}" class="menu-link">
-              <div>Categories</div>
-            </a>
-          </li>
-           <li class="menu-item {{ (request()->is('admin/models/sub-categories*')) ? 'open' : '' }}">
-            <a href="{{route('admin.product.sub_categories')}}" class="menu-link">
-              <div>Sub Categories</div>
-            </a>
-          </li>
-          <li class="menu-item {{ (request()->is('admin/models/colors*')) ? 'open' : '' }}">
-            <a href="{{route('admin.product.colors')}}" class="menu-link">
-              <div>Colors</div>
-            </a>
-          </li>
-          <li class="menu-item {{ (request()->is('admin/models/sizes*')) ? 'open' : '' }}">
-            <a href="{{route('admin.product.sizes')}}" class="menu-link">
-              <div>Sizes</div>
-            </a>
-          </li>
-          
-           <li class="menu-item {{ (request()->is('admin/models/list*')) ? 'open' : '' }}">
-            <a href="{{route('admin.product.index')}}" class="menu-link">
-              <div>Products</div>
-            </a>
-          </li>
           <li class="menu-item {{ (request()->is('admin/models/type*')) ? 'open' : '' }}">
             <a href="{{route('admin.product.type')}}" class="menu-link">
               <div>Keywords</div>

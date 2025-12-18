@@ -22,21 +22,21 @@
             <div>
               <h5 class="card-title m-0 me-2 text-primary">🎉 Dashboard</h5>
               <p class="small mb-0">
-                <span class="h6 mb-0">Welcome to the <strong>E-went Portal</strong> 👋</span><br>
-                Manage your events, bookings, and performance insights all in one place.
+                <span class="h6 mb-0">Welcome to the <strong>E-CRM Portal</strong> 👋</span><br>
+                <!-- Manage your events, bookings, and performance insights all in one place. -->
               </p>
             </div>
             <div class="text-end">
-              <span class="badge bg-success">Active</span><br>
+              <!-- <span class="badge bg-success">Active</span><br> -->
               {{-- <small>Last login: <span class="text-light">{{ $admin->last_login_at ? $admin->last_login_at->diffForHumans() : 'First login' }}</span></small> --}}
             </div>
           </div>
         </div>
         
-        <div class="card-body pt-lg-10">
-          <div class="row g-4">
+        <!-- <div class="card-body pt-lg-10">
+          <div class="row g-4"> -->
             {{-- Total Vehicles --}}
-            <div class="col-md-3 col-6">
+            <!-- <div class="col-md-3 col-6">
               <div class="card shadow border-0 text-white" style="background: linear-gradient(to right, #a8edea, #fed6e3);">
                 <div class="card-body">
                   <div class="d-flex justify-content-between align-items-start">
@@ -49,9 +49,9 @@
                 </div>
               </div>
             </div>
-          
+           -->
             {{-- Assigned Vehicles --}}
-            <div class="col-md-3 col-6">
+            <!-- <div class="col-md-3 col-6">
               <div class="card shadow border-0 text-white" style="background: linear-gradient(to right, #cbb4d4, #e0c3fc);">
                 <div class="card-body">
                   <div class="d-flex justify-content-between align-items-start">
@@ -64,9 +64,9 @@
                 </div>
               </div>
             </div>
-          
+           -->
             {{-- Unassigned Vehicles --}}
-            <div class="col-md-3 col-6">
+            <!-- <div class="col-md-3 col-6">
               <div class="card shadow border-0 text-white" style="background: linear-gradient(to right, #fddb92, #d1fdff);">
                 <div class="card-body">
                   <div class="d-flex justify-content-between align-items-start">
@@ -78,10 +78,10 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
           
             {{-- Overdue Vehicles --}}
-            <div class="col-md-3 col-6">
+            <!-- <div class="col-md-3 col-6">
               <div class="card shadow border-0 text-white" style="background: linear-gradient(to right, #fda085, #f6d365);">
                 <div class="card-body">
                   <div class="d-flex justify-content-between align-items-start">
@@ -94,9 +94,12 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
           
-        </div>
+        <!-- </div> -->
+
+
+
       </div>
     </div>
     <!--/ Transactions -->
