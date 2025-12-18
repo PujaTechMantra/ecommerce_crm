@@ -18,7 +18,7 @@
             </div>
         <div class="card">
             <div class="card-header">
-                <h5>Filter</h5>
+                <h5>Product List</h5>
                 <div class="row g-2">
                 
 

@@ -98,14 +98,19 @@
                 <!-- Collection / Category / Subcategory -->
                 <div class="card mb-4">
                     <div class="card-body">
-                        <div class="mb-3">
+                        <div class="mb-3" wire:ignore>
                             <label class="card-header required">Collection</label>
-                            <select wire:model.live="collection_id" class="form-select">
+                            <select
+                                id="collection_id"
+                                class="form-select"
+                                data-selected="{{ $collection_id }}"
+                            >
                                 <option value="">Select</option>
                                 @foreach($collections as $collection)
                                     <option value="{{ $collection->id }}">{{ $collection->name }}</option>
                                 @endforeach
                             </select>
+
                             @error('collection_id') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
 
@@ -391,5 +396,41 @@
         setTimeout(initEditors, 300);
     });
 </script>
+<link rel="stylesheet" href="{{ asset('assets/custom_css/component-chosen.css') }}">
+<script src="{{ asset('assets/js/chosen.jquery.js') }}"></script> -->
+<script>
+    var jq = $.noConflict();
+
+    function initCollectionChosen() {
+        const el = jq('#collection_id');
+        if (!el.length) return;
+
+        el.chosen({ width: "100%" });
+
+        // SET SELECTED VALUE ON LOAD
+        const selected = el.data('selected');
+        if (selected) {
+            el.val(selected).trigger('chosen:updated');
+        }
+
+        // Update Livewire when changed
+        el.on('change', function () {
+            @this.set('collection_id', jq(this).val());
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(initCollectionChosen, 300);
+    });
+
+    // Re-sync AFTER Livewire updates
+    Livewire.hook('message.processed', () => {
+        const val = @this.get('collection_id');
+        if (val) {
+            jq('#collection_id').val(val).trigger('chosen:updated');
+        }
+    });
+</script>
+
 @endsection
 

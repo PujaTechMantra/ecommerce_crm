@@ -83,9 +83,9 @@
                     
                     <div class="card-body">
 
-                        <div class="mb-3">
+                        <div class="mb-3" wire:ignore>
                             <label class="required">Collection</label>
-                            <select wire:model.live="collection_id" class="form-select">
+                            <select id="collection_id" class="form-select">
                                 <option value="">Select</option>
                                 @foreach($collections as $collection)
                                     <option value="{{ $collection->id }}">{{ $collection->name }}</option>
@@ -351,4 +351,28 @@
     });
 </script>
 
+<link rel="stylesheet" href="{{ asset('assets/custom_css/component-chosen.css') }}">
+<script src="{{ asset('assets/js/chosen.jquery.js') }}"></script>
+  <script>
+    var jq = $.noConflict();
+
+    jq("#collection_id").chosen({
+        width: "100%"
+    });
+
+    jq("#collection_id").off('change').on('change', function () {
+        const selected = jq(this).val();
+
+        @this.set('collection_id', selected);
+    });
+    jq("#collection_id").off('change').on('change', function () {
+        const selected = jq(this).val();
+
+        @this.set('collection_id', selected);
+    });
+
+    Livewire.hook('message.processed', () => {
+        jq("#collection_id").trigger("chosen:updated");
+    });
+</script>
 @endsection
