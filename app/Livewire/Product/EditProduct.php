@@ -30,10 +30,14 @@ class EditProduct extends Component
     public $base_price;
     public $display_price;
     public $specification;
+    public $product_code;
+    public $meta_title;
+    public $meta_description;
+    public $meta_keyword;
     public $image;
-    public $dir_image = [];     
-    public $existing_dir_images = []; 
-    public $product_type = null;
+    public $single_image = [];     
+    public $existing_single_images = []; 
+    public $product_type = '';
 
     public $rows = [];
 
@@ -42,8 +46,9 @@ class EditProduct extends Component
     public $subcategories = [];
     public $colors = [];
     public $sizes = [];
-    public $removed_direct_images = [];
+    public $removed_single_images = [];
     public $removed_variation_images = [];
+    public $removed_variation_ids = [];
 
     public function mount($productId)
     {
@@ -62,29 +67,35 @@ class EditProduct extends Component
         $this->title         = $product->title;
         $this->short_desc    = $product->short_desc;
         $this->desc          = $product->long_desc;
-        $this->product_type  = $product->product_type == 1 ? 'direct' : 'variation';
+        $this->product_type  = $product->product_type;
+        $this->product_code = $product->product_sku;
+        $this->meta_title       = $product->meta_title;
+        $this->meta_description = $product->meta_description;
+        $this->meta_keyword     = $product->meta_keyword;
 
         // Filter categories & subcategories
         $this->categories = Category::where('collection_id', $this->collection_id)->get();
         $this->subcategories = SubCategory::where('category_id', $this->cat_id)->get();
 
         // Load items
-        if ($this->product_type === 'direct') {
+        if ($this->product_type === 'single') {
             $item = $product->items()->first();
             if ($item) {
                 $this->base_price = $item->base_price;
                 $this->display_price = $item->display_price;
                 $this->specification = $item->specification;
-                $this->dir_image = null;
-                $this->existing_dir_images = $item->images
+                $this->single_image = null;
+                $this->existing_single_images = $item->images
                     ->pluck('image')
                     ->toArray();
             }
         } else {
             $this->rows = $product->items->map(function ($item) {
                 return [
+                    'id'            => $item->id,
                     'color_id'      => $item->color_id,
                     'size_id'       => $item->size_id,
+                    'item_code'     => $item->item_code,
                     'base_price'    => $item->base_price,
                     'display_price' => $item->display_price,
                     'specification' => $item->specification,
@@ -119,6 +130,7 @@ class EditProduct extends Component
         $this->rows[] = [
             'color_id' => '',
             'size_id' => '',
+            'item_code' => '',
             'base_price' => '',
             'display_price' => '',
             'specification' => '',
@@ -128,11 +140,11 @@ class EditProduct extends Component
         $this->dispatch('init-editors');
     }
 
-    public function removeDirectImage($index)
+    public function removeSingleImage($index)
     {
-        $this->removed_direct_images[] = $this->existing_dir_images[$index];
-        unset($this->existing_dir_images[$index]);
-        $this->existing_dir_images = array_values($this->existing_dir_images);
+        $this->removed_single_images[] = $this->existing_single_images[$index];
+        unset($this->existing_single_images[$index]);
+        $this->existing_single_images = array_values($this->existing_single_images);
     }
 
     public function removeVariationImage($rowIndex, $imgIndex)
@@ -154,6 +166,9 @@ class EditProduct extends Component
                 $this->removed_variation_images[$index][] = $img;
             }
         }
+        if (!empty($this->rows[$index]['id'])) {
+            $this->removed_variation_ids[] = $this->rows[$index]['id'];
+        }
 
         unset($this->rows[$index]);
         $this->rows = array_values($this->rows);
@@ -161,16 +176,16 @@ class EditProduct extends Component
 
     public function updatedProductType($value)
     {
-        if ($value === 'direct') {
+        if ($value === 'single') {
             $this->rows = [];
             $item = $this->product->items()->first();
             $this->base_price = $item?->base_price;
             $this->display_price = $item?->display_price;
             $this->specification = $item?->specification;
-            $this->dir_image = null; 
+            $this->single_image = null; 
 
         } else {
-            // Reset direct fields
+            // Reset single fields
             $this->base_price = '';
             $this->display_price = '';
             $this->specification = '';
@@ -178,6 +193,7 @@ class EditProduct extends Component
                 return [
                     'color_id' => $item->color_id,
                     'size_id' => $item->size_id,
+                    'item_code' => $item->item_code,
                     'base_price' => $item->base_price,
                     'display_price' => $item->display_price,
                     'specification' => $item->specification,
@@ -206,32 +222,47 @@ class EditProduct extends Component
         $this->product->update([
             'title' => $this->title,
             'slug' => Str::slug($this->title),
+            'product_sku' => $this->product_code,
             'collection_id' => $this->collection_id,
             'category_id' => $this->cat_id ?: null,
             'sub_category_id' => $this->subcat_id ?: null,
             'short_desc' => $this->short_desc,
             'long_desc' => $this->desc,
             'image' => $imagePath,
-            'product_type' => $this->product_type === 'direct' ? 1 : 2,
+            'product_type' => $this->product_type,
+            'meta_title'       => $this->meta_title,
+            'meta_description' => $this->meta_description,
+            'meta_keyword'     => $this->meta_keyword,
         ]);
 
-        if ($this->product_type === 'direct') {
+        $images = ProductImage::whereIn(
+            'product_item_id',
+            $this->removed_variation_ids
+        )->get();
 
-           $directItem = ProductItem::firstOrCreate([
+        foreach ($images as $img) {
+            Storage::disk('public')->delete($img->image);
+            $img->delete();
+        }
+        ProductItem::whereIn('id', $this->removed_variation_ids)->delete();
+
+        if ($this->product_type === 'single') {
+
+           $singleItem = ProductItem::firstOrCreate([
                 'product_id'   => $this->product->id,
-                'product_type' => 1,
+                'product_type' => $this->product_type,
             ], [
                 'image' => $this->product->image // fallback
             ]);
 
-            $directItem->update([
+            $singleItem->update([
                 'base_price'    => $this->base_price,
                 'display_price' => $this->display_price,
                 'specification' => $this->specification,
             ]);
 
             // SAVE MULTIPLE IMAGES
-                foreach ($this->removed_direct_images as $img) {
+                foreach ($this->removed_single_images as $img) {
                     $image = ProductImage::where('image', $img)->first();
                     if ($image) {
                         Storage::disk('public')->delete($image->image);
@@ -240,12 +271,12 @@ class EditProduct extends Component
                 }
 
                 //  Upload new images (only if present)
-                if (!empty($this->dir_image)) {
-                    foreach ($this->dir_image as $file) {
+                if (!empty($this->single_image)) {
+                    foreach ($this->single_image as $file) {
                         $path = $file->store('product-images', 'public');
 
                         ProductImage::create([
-                            'product_item_id' => $directItem->id,
+                            'product_item_id' => $singleItem->id,
                             'image'           => $path,
                         ]);
                     }
@@ -253,10 +284,19 @@ class EditProduct extends Component
 
         } else {
 
-            // Remove direct item if switching to variation
-            ProductItem::where('product_id', $this->product->id)
-                ->where('product_type', 1)
-                ->delete();
+            // Remove single item if switching to variation
+            $singleItem = ProductItem::where('product_id', $this->product->id)
+                ->where('product_type', 'single')
+                ->first();
+
+            if ($singleItem) {
+                foreach ($singleItem->images as $img) {
+                    Storage::disk('public')->delete($img->image);
+                    $img->delete();
+                }
+
+                $singleItem->delete();
+            }
 
                 foreach ($this->removed_variation_images as $rowImages) {
                     foreach ($rowImages as $img) {
@@ -271,21 +311,28 @@ class EditProduct extends Component
                     // Variation products: handle each row
                 foreach ($this->rows as $row) {
 
-                    $item = ProductItem::updateOrCreate(
-                        [
-                            'product_id'   => $this->product->id,
-                            'color_id'     => $row['color_id'],
-                            'size_id'      => $row['size_id'],
-                            'product_type' => 2,
-                        ],
-                        [
-                            'base_price'     => $row['base_price'],
-                            'display_price'  => $row['display_price'],
-                            'specification'  => $row['specification'],
-                        ]
-                    );
-
-                   
+                    if (!empty($row['id'])) {
+                        $item = ProductItem::find($row['id']);
+                        $item->update([
+                            'color_id'      => $row['color_id'],
+                            'size_id'       => $row['size_id'],
+                            'item_code'     => $row['item_code'],
+                            'base_price'    => $row['base_price'],
+                            'display_price' => $row['display_price'],
+                            'specification' => $row['specification'],
+                        ]);
+                    } else {
+                        $item = ProductItem::create([
+                            'product_id'    => $this->product->id,
+                            'product_type'  => $this->product_type,
+                            'color_id'      => $row['color_id'],
+                            'size_id'       => $row['size_id'],
+                            'item_code'     => $row['item_code'],
+                            'base_price'    => $row['base_price'],
+                            'display_price' => $row['display_price'],
+                            'specification' => $row['specification'],
+                        ]);
+                    }
 
 
                     // SAVE MULTIPLE IMAGES (product_id)
@@ -317,6 +364,7 @@ class EditProduct extends Component
 
             $attributes["rows.$index.color_id"]      = "Variation {$no} Color";
             $attributes["rows.$index.size_id"]       = "Variation {$no} Size";
+            $attributes["rows.$index.item_code"]       = "Variation {$no} Item Code";
             $attributes["rows.$index.base_price"]    = "Variation {$no} Base Price";
             $attributes["rows.$index.display_price"] = "Variation {$no} Display Price";
             $attributes["rows.$index.image"]         = "Variation {$no} Image";
@@ -328,23 +376,28 @@ class EditProduct extends Component
     protected function rules()
     {
         $rules = [
-            'collection_id' => 'required',
-            'title'         => 'required|string|max:255',
-            'image'         => 'nullable|image',
-            'product_type'  => 'required',
+            'collection_id'     => 'required',
+            'title'             => 'required|string|max:255',
+            'product_code'      => 'required|string|max:100|unique:products,product_sku,' . $this->product->id,
+            'product_type'      => 'required',
+            'image'             => 'nullable|image',
+            'meta_title'        => 'nullable|string|max:255',
+            'meta_description'  => 'nullable|string|max:500',
+            'meta_keyword'      => 'nullable|string|max:500',
         ];
 
-        if ($this->product_type === 'direct') {
+        if ($this->product_type === 'single') {
             $rules['base_price'] = 'required|numeric|min:0';
             $rules['display_price'] = 'required|numeric|min:0';
-            $rules['dir_image'] = 'nullable|array';
-            $rules['dir_image.*'] = 'image|max:2048';
+            $rules['single_image'] = 'nullable|array';
+            $rules['single_image.*'] = 'image|max:2048';
         }
 
         if ($this->product_type === 'variation') {
             foreach ($this->rows as $index => $row) {
                 $rules["rows.$index.color_id"] = 'required';
                 $rules["rows.$index.size_id"] = 'required';
+                $rules["rows.$index.item_code"] = 'required|string|max:100|unique:product_items,item_code,' . ($row['id'] ?? 'NULL') . ',id';
                 $rules["rows.$index.base_price"] = 'required|numeric|min:0';
                 $rules["rows.$index.display_price"] = 'required|numeric|min:0';
                 $rules["rows.$index.images"] = $this->product

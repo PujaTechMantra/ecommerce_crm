@@ -11,11 +11,76 @@
 
                     </div>
                 </div>
-            <div class="col-lg-12 d-flex justify-content-end mb-3">
+               
+            <div class="col-lg-12 d-flex justify-content-end gap-2 mb-3">
+                <button type="button"
+                        class="btn btn-warning"
+                        data-bs-toggle="modal"
+                        data-bs-target="#importCsvModal">
+                    <i class="ri-file-text-line ri-16px me-1"></i> Import
+                </button>
+
                 <a href="{{ route('admin.product.add') }}" class="btn btn-primary">
                     <i class="ri-add-line ri-16px me-1"></i> Add Product
                 </a>
             </div>
+            <!-- Import CSV Modal -->
+            <div class="modal fade" id="importCsvModal" tabindex="-1" aria-hidden="true" wire:ignore.self>
+                <div class="modal-dialog modal-md modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Import Products (CSV)</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+
+                        <form wire:submit.prevent="import" enctype="multipart/form-data">
+                            <div class="modal-body">
+
+                                <!-- CSV Upload -->
+                                <div class="mb-3">
+                                    <label class="form-label">Upload CSV File</label>
+                                    <input type="file"
+                                        wire:model="csv_file"
+                                        class="form-control"
+                                        accept=".csv">
+                                    @error('csv_file')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
+
+                                <!-- Sample CSV -->
+                                <div class="mb-3">
+                                    <a href="{{ asset('assets/sample/sample_product_import.csv') }}"
+                                    target="_blank"
+                                    class="btn btn-outline-success btn-sm">
+                                        <i class="ri-download-line me-1"></i> Download Sample CSV
+                                    </a>
+                                </div>
+
+                                @if(session()->has('csv_error'))
+                                    <div class="alert alert-danger">
+                                        {{ session('csv_error') }}
+                                    </div>
+                                @endif
+
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button"
+                                        class="btn btn-secondary"
+                                        data-bs-dismiss="modal">
+                                    Cancel
+                                </button>
+
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="ri-upload-line me-1"></i> Import
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
         <div class="card">
             <div class="card-header">
                 <h5>Product List</h5>
@@ -132,4 +197,13 @@
     });
 
 </script>
+<script>
+    window.addEventListener('closeImportModal', () => {
+        const modal = bootstrap.Modal.getInstance(
+            document.getElementById('importCsvModal')
+        );
+        modal?.hide();
+    });
+</script>
+
 @endsection

@@ -11,9 +11,11 @@ class ProductItem extends Model
         'product_id',
         'color_id',
         'size_id',
+        'item_code',
         'base_price',
         'display_price',
         'image',
+        'status',
         'specification',
     ];
 

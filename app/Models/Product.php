@@ -13,7 +13,6 @@ class Product extends Model
     protected $fillable = [
         'title',
         'product_sku',
-        'types',
         'short_desc',
         'long_desc',
         'collection_id',
@@ -28,12 +27,8 @@ class Product extends Model
         'is_bestseller',
         'meta_title',
         'meta_description',
-        'is_driving_licence_required',
         'meta_keyword',
-        'is_selling',
-        'is_rent',
-        'base_price',
-        'display_price',
+        'deleted_at',
     ];
 
     public function collection()

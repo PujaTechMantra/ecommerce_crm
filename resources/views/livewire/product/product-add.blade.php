@@ -27,9 +27,14 @@
                     <div class="card-body">
                         <div class="form-floating mb-3">
                             <input type="text" wire:model.defer="title" class="form-control" placeholder="title">
-                                <label class="required">Title</label>
-                                @error('title') <span class="text-danger">{{ $message }}</span> @enderror
-                            </div>
+                            <label class="required">Title</label>
+                            @error('title') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" wire:model.defer="product_code" class="form-control" placeholder="Product Code">
+                            <label class="required">Product Code</label>
+                            @error('product_code') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
 
                         <!-- Short Description -->
                         <div class="mb-3">
@@ -53,6 +58,28 @@
 
                     </div>
                 </div>
+
+                <div class="card mb-4">
+                    <div class="card-body">
+                    <h6>Meta</h6>
+
+                        <div class="form-floating mb-3">
+                            <input type="text" wire:model.defer="meta_title" class="form-control" placeholder="Title">
+                            <label>Title</label>
+                            @error('meta_title') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" wire:model.defer="meta_description" class="form-control" placeholder="Description">
+                            <label>Description</label>
+                            @error('meta_description') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" wire:model.defer="meta_keyword" class="form-control" placeholder="Keyword">
+                            <label>Keyword</label>
+                            @error('meta_keyword') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
+                    </div>
+                </div>
             </div>
            
 
@@ -66,14 +93,13 @@
                         <div class="w-100 product__thumb">
                             <label for="main_image">
                                 <img id="main_image_preview" 
-                                    src="{{ $image ? $image->temporaryUrl() : asset('backend/images/placeholder-image.jpg') }}" 
+                                    src="{{ $image ? $image->temporaryUrl() : asset('assets/img/placeholder-product.jpg') }}" 
                                     class="img-fluid mb-3 border rounded" 
                                     style="width:100%; max-height:100px; object-fit:cover;"/>
                             </label>
                             @error('image') <p class="small text-danger">{{ $message }}</p> @enderror
                         </div>
                         <input type="file" id="main_image" accept="image/*" wire:model="image" class="d-none" onchange="previewImage(event, 'main_image_preview')">
-                        <small>Image Size: 870px X 1160px</small>
                     </div>
 
                 </div>
@@ -83,14 +109,16 @@
                     
                     <div class="card-body">
 
-                        <div class="mb-3" wire:ignore>
+                        <div class="mb-3">
                             <label class="required">Collection</label>
-                            <select id="collection_id" class="form-select">
-                                <option value="">Select</option>
-                                @foreach($collections as $collection)
-                                    <option value="{{ $collection->id }}">{{ $collection->name }}</option>
-                                @endforeach
-                            </select>
+                            <div wire:ignore>
+                                <select id="collection_id" class="form-select">
+                                    <option value="">Select</option>
+                                    @foreach($collections as $collection)
+                                        <option value="{{ $collection->id }}">{{ $collection->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                             @error('collection_id') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
 
@@ -143,22 +171,22 @@
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="radio"
                                 wire:model.live="product_type"  
-                                id="direct" value="direct">
-                            <label class="form-check-label" for="direct">Direct Product</label>
+                                id="single" value="single">
+                            <label class="form-check-label" for="single">Single Product</label>
                         </div>
                          @error('product_type') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
                 </div>
 
 
-                <!-- Base Price for Direct Product -->
-                 @if($product_type === 'direct')
+                <!-- Base Price for Single Product -->
+                 @if($product_type === 'single')
 
-                <div wire:key="direct-block" class="mb-3">
+                <div wire:key="single-block" class="mb-3">
                     <div class="border rounded p-3 mb-3 ">
 
                         <div class="row g-2">
-                            <div class="col-md-6">
+                            <div class="col-md-5">
                                 <label class="form-label required">Base Price</label>
                                 <input type="number"
                                     wire:model.defer="base_price"
@@ -166,7 +194,7 @@
                                 @error('base_price') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-5">
                                 <label class="form-label required">Display Price</label>
                                 <input type="number"
                                     wire:model.defer="display_price"
@@ -179,11 +207,11 @@
                             <div class="col-md-4">
                                 <label class="form-label">Image</label>
                                 <input type="file"
-                                    wire:model="dir_image"
+                                    wire:model="single_image"
                                     multiple
                                     accept="image/*"
                                     class="form-control form-control-sm">
-                                    @error('dir_image.*') 
+                                    @error('single_image.*') 
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                             </div>
@@ -191,7 +219,7 @@
 
                         <div class="row g-2">
 
-                            <div class="col-md-8">
+                            <div class="col-md-12">
                                 <label class="form-label">Specification</label>
                                 <!-- <textarea wire:model="specification"
                                         rows="2"
@@ -217,7 +245,7 @@
 
                         <!-- Row 1 -->
                         <div class="row g-2 mb-2">
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <label class="form-label required">Color</label>
                                 <select wire:model="rows.{{ $index }}.color_id"
                                         class="form-select form-select-sm">
@@ -230,7 +258,7 @@
 
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <label class="form-label required">Size</label>
                                 <select wire:model="rows.{{ $index }}.size_id"
                                         class="form-select form-select-sm">
@@ -241,6 +269,13 @@
                                 </select>
                                 @error("rows.$index.size_id") <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
+                            <div class="col-md-2">
+                                <label class="form-label required">Item Code</label>
+                                <input type="text"
+                                    wire:model="rows.{{ $index }}.item_code"
+                                    class="form-control form-control-sm">
+                                @error("rows.$index.item_code") <span class="text-danger">{{ $message }}</span> @enderror
+                            </div>
 
                             <div class="col-md-3">
                                 <label class="form-label required">Base Price</label>
@@ -249,6 +284,7 @@
                                     class="form-control form-control-sm">
                                 @error("rows.$index.base_price") <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
+                            
 
                             <div class="col-md-3">
                                 <label class="form-label required">Display Price</label>
@@ -268,7 +304,7 @@
                                     multiple
                                     accept="image/*"
                                     class="form-control form-control-sm">
-                                @error("rows.$index.images.*") 
+                                @error("rows.$index.images*") 
                                     <span class="text-danger">{{ $message }}</span> 
                                 @enderror
                             </div>
@@ -276,7 +312,7 @@
 
                         <div class="row g-2">
 
-                            <div class="col-md-8">
+                            <div class="col-md-12">
                                 <label class="form-label">Specification</label>
                                 <!-- <textarea wire:model="rows.{{ $index }}.specification"
                                         rows="2"
@@ -360,11 +396,6 @@
         width: "100%"
     });
 
-    jq("#collection_id").off('change').on('change', function () {
-        const selected = jq(this).val();
-
-        @this.set('collection_id', selected);
-    });
     jq("#collection_id").off('change').on('change', function () {
         const selected = jq(this).val();
 

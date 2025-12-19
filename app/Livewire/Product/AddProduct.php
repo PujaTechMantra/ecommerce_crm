@@ -12,6 +12,7 @@ use App\Models\Category;
 use App\Models\SubCategory;
 use App\Models\Color;
 use App\Models\Size;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
 class AddProduct extends Component
@@ -24,13 +25,15 @@ class AddProduct extends Component
     public $cat_id;
     public $subcat_id;
     public $title;
-
     public $short_desc;
     public $desc;
-
     public $base_price;
     public $display_price;
     public $specification;
+    public $product_code;
+    public $meta_title;
+    public $meta_description;
+    public $meta_keyword;
 
     public $size_chart;
     public $pack;
@@ -40,11 +43,11 @@ class AddProduct extends Component
     public $only_for;
 
     public $image;
-    public $dir_image = [];
+    public $single_image = [];
 
     public $product_type = '';
 
-    public $direct = [
+    public $single = [
         'base_price' => '',
         'display_price' => '',
         'image' => null,
@@ -55,6 +58,7 @@ class AddProduct extends Component
         [
             'color_id' => '',
             'size_id' => '',
+            'item_code' => '',
             'base_price' => '',
             'display_price' => '',
             'images' => [],
@@ -99,12 +103,13 @@ class AddProduct extends Component
                 return [
                     'color_id' => $option->color_id,
                     'size_id' => $option->size_id,
+                    'item_code' => $option->item_code,
                     'base_price' => $option->price,
                     'display_price' => $option->offer_price,
                 ];
             })->toArray();
 
-            $this->product_type = $this->rows ? 'variation' : 'direct';
+            $this->product_type = $this->rows ? 'variation' : 'single';
         }
 
         $this->updatedCollectionId();
@@ -133,6 +138,7 @@ class AddProduct extends Component
         $this->rows[] = [
             'color_id' => '',
             'size_id' => '',
+            'item_code' => '',
             'base_price' => '',
             'display_price' => '',
             'image' => null,
@@ -170,6 +176,7 @@ class AddProduct extends Component
         $product = Product::Create(
             [
                 'title' => $this->title,
+                'product_sku' => $this->product_code,
                 'slug' => \Str::slug($this->title),
                 'collection_id' => $this->collection_id,
                 'category_id' => $this->cat_id,
@@ -177,24 +184,27 @@ class AddProduct extends Component
                 'short_desc' => $this->short_desc,
                 'long_desc' => $this->desc,
                 'image' => $mainImagePath,
-                'product_type' => $this->product_type === 'direct' ? 1 : 2,
+                'product_type' => $this->product_type,
+                'meta_title' => $this->meta_title,  
+                'meta_description' => $this->meta_description,  
+                'meta_keyword' => $this->meta_keyword,  
             ]
         );
 
-        /** DIRECT PRODUCT **/
-        if ($this->product_type === 'direct') {
+        /** single PRODUCT **/
+        if ($this->product_type === 'single') {
 
             $item = ProductItem::create([
                 'product_id' => $product->id,
-                'product_type' => 1,
+                'product_type' => $this->product_type,
                 'base_price' => $this->base_price,
                 'display_price' => $this->display_price,
                 'specification' => $this->specification,
             ]);
 
-            // SAVE MULTIPLE DIRECT IMAGES
-            if (!empty($this->dir_image)) {
-                foreach ($this->dir_image as $file) {
+            // SAVE MULTIPLE single IMAGES
+            if (!empty($this->single_image)) {
+                foreach ($this->single_image as $file) {
                     $path = $file->store('product-images', 'public');
 
                     ProductImage::create([
@@ -211,9 +221,10 @@ class AddProduct extends Component
 
                 $item = ProductItem::create([
                     'product_id'     => $product->id,
-                    'product_type'   => 2,
+                    'product_type'   => $this->product_type,
                     'color_id'       => $row['color_id'],
                     'size_id'        => $row['size_id'],
+                    'item_code'      => $row['item_code'],
                     'base_price'     => $row['base_price'],
                     'display_price'  => $row['display_price'],
                     'specification'  => $row['specification'],
@@ -247,9 +258,10 @@ class AddProduct extends Component
 
             $attributes["rows.$index.color_id"]      = "Variation {$no} Color";
             $attributes["rows.$index.size_id"]       = "Variation {$no} Size";
+            $attributes["rows.$index.item_code"]       = "Variation {$no} Item Code";
             $attributes["rows.$index.base_price"]    = "Variation {$no} Base Price";
             $attributes["rows.$index.display_price"] = "Variation {$no} Display Price";
-            $attributes["rows.$index.image"]         = "Variation {$no} Image";
+            $attributes["rows.$index.images"]         = "Variation {$no} Image";
         }
 
         return $attributes;
@@ -259,6 +271,8 @@ class AddProduct extends Component
         $rules = [
             'collection_id' => 'required',
             'title'          => 'required|string|max:255',
+            'product_code' => 'required|string|max:100|unique:products,product_sku',
+            'product_type' => 'required',
             'image'         => $this->product
                 ? 'nullable|image'
                 : 'required|image',
@@ -266,12 +280,12 @@ class AddProduct extends Component
             'product_type'  => 'required',
         ];
 
-        // DIRECT PRODUCT
-        if ($this->product_type === 'direct') {
+        // single PRODUCT
+        if ($this->product_type === 'single') {
             $rules['base_price']    = 'required|numeric|min:0';
             $rules['display_price'] = 'required|numeric|min:0';
-            $rules['dir_image'] = 'nullable|array|min:1';
-            $rules['dir_image.*'] = 'image|max:2048';
+            $rules['single_image'] = 'nullable|array|min:1';
+            $rules['single_image.*'] = 'image';
         }
 
         // VARIATION PRODUCT
@@ -279,10 +293,11 @@ class AddProduct extends Component
             foreach ($this->rows as $index => $row) {
                 $rules["rows.$index.color_id"]      = 'required';
                 $rules["rows.$index.size_id"]       = 'required';
+                $rules["rows.$index.item_code"]     = 'required|string|max:100|unique:product_items,item_code';
                 $rules["rows.$index.base_price"]    = 'required|numeric|min:0';
                 $rules["rows.$index.display_price"] = 'required|numeric|min:0';
                 $rules["rows.$index.images"] = 'required|array|min:1';
-                $rules["rows.$index.images.*"] = 'image|max:2048';
+                $rules["rows.$index.images.*"] = 'image';
             }
         }
 
