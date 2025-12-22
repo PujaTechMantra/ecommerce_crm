@@ -14,6 +14,7 @@ use App\Models\Size;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use DB;
 
 class ProductList extends Component
@@ -27,6 +28,7 @@ class ProductList extends Component
     public $sub_cat_id;
     public $keyword;
     public $csv_file;
+    public $stock_csv;
 
     public $collections = [];
     public $categories = [];
@@ -34,6 +36,7 @@ class ProductList extends Component
 
     protected $rules = [
         'csv_file' => 'required|mimes:csv,txt|max:2048',
+        'stock_csv' => 'required|mimes:csv,txt|max:2048',
     ];
 
     protected $listeners = [
@@ -74,6 +77,12 @@ class ProductList extends Component
         session()->flash('message', 'Product status updated successfully!');
     }
 
+    public function resetStockForm()
+    {
+        $this->reset(['stock_csv']);
+        $this->resetErrorBag();
+    }
+
     public function openFile()
     {
         $this->dispatch('openFile');
@@ -81,7 +90,9 @@ class ProductList extends Component
 
     public function import()
     {
-        $this->validate();
+        $this->validate([
+            'csv_file' => 'required|mimes:csv,txt|max:2048',
+        ]);
 
         DB::beginTransaction();
 
@@ -169,13 +180,12 @@ class ProductList extends Component
 
                 // product item
                 if (ProductItem::where('item_code', $data['item_code'])->exists()) {
-                    continue;
+                    throw new \Exception("Item code already exists: {$data['item_code']}");
                 }
 
                 $itemData = [
                     'product_id'    => $product->id,
                     'product_type'  => $productType,
-                    'item_code'     => $data['item_code'],
                     'base_price'    => $data['base_price'],
                     'display_price' => $data['display_price'] ?? null,
                     'specification' => $data['specification'] ?? null,
@@ -207,6 +217,12 @@ class ProductList extends Component
 
                     $itemData['color_id'] = $colorId;
                     $itemData['size_id']  = $sizeId;
+                    $itemData['item_code'] = $data['item_code'];
+
+                }else{
+
+                    $itemData['item_code'] = $product->product_sku;
+
                 }
 
                 ProductItem::create($itemData);
@@ -224,6 +240,110 @@ class ProductList extends Component
         } catch (\Exception $e) {
             DB::rollBack();
             session()->flash('csv_error', $e->getMessage());
+        }
+    }
+
+    public function downloadStockSample()
+    {
+        $fileName = 'stock_sample.csv';
+
+        return response()->streamDownload(function () {
+
+            $handle = fopen('php://output', 'w');
+
+            fputcsv($handle, ['product_code', 'item_code', 'quantity']);
+
+            $items = ProductItem::query()
+                ->join('products', 'products.id', '=', 'product_items.product_id')
+                ->whereNull('products.deleted_at')
+                ->whereNull('product_items.deleted_at')
+                ->select(
+                    'products.product_sku',
+                    'product_items.item_code'
+                )
+                ->orderBy('products.id')
+                ->get();
+
+            foreach ($items as $item) {
+                fputcsv($handle, [
+                    $item->product_sku, 
+                    $item->item_code, 
+                    ''        
+                ]);
+            }
+
+            fclose($handle);
+
+        }, $fileName, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="'.$fileName.'"',
+        ]);
+    }
+
+    public function updateStock()
+    {
+        $this->validate([
+            'stock_csv' => 'required|mimes:csv,txt|max:2048',
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            $path = $this->stock_csv->getRealPath();
+            $rows = array_map('str_getcsv', file($path));
+            $header = array_map('trim', array_shift($rows));
+
+            foreach ($rows as $row) {
+
+                if (count($row) !== count($header)) {
+                    continue;
+                }
+
+                $data = array_combine($header, $row);
+
+                $productCode = trim($data['product_code']);
+                $itemCode    = trim($data['item_code']);
+                $qty         = (int) $data['quantity'];
+
+                if ($qty <= 0) {
+                    throw new \Exception("Invalid quantity for item: {$itemCode}");
+                }
+
+                $product = Product::where('product_sku', $productCode)->first();
+                if (!$product) {
+                    throw new \Exception("Product not found: {$productCode}");
+                }
+
+                $item = ProductItem::where('product_id', $product->id)
+                    ->where('item_code', $itemCode)
+                    ->first();
+
+                if (!$item) {
+                    throw new \Exception("Product item not found: {$itemCode}");
+                }
+
+                $item->quantity = ($item->quantity ?? 0) + $qty;
+                $item->save();
+
+                DB::table('stock_logs')->insert([
+                    'product_id'      => $product->id,
+                    'product_item_id' => $item->id,
+                    'quantity'        => $qty,
+                    'type'            => 'Add',
+                    'created_at'      => now(),
+                    'updated_at'      => now(),
+                ]);
+            }
+
+            DB::commit();
+
+            session()->flash('message', 'Stock updated successfully!');
+            $this->reset('stock_csv');
+            $this->dispatch('closeStockModal');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            session()->flash('stock_error', $e->getMessage());
         }
     }
 

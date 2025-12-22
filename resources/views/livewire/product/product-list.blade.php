@@ -1,6 +1,4 @@
-<div class="content-wrapper">
-            
-    <div class="container-xxl flex-grow-1 container-p-y">
+    <div class="flex-grow-1">
             <div class="col-lg-12 justify-content-left">
                     <div class="row">
                         @if(session()->has('message'))
@@ -13,6 +11,13 @@
                 </div>
                
             <div class="col-lg-12 d-flex justify-content-end gap-2 mb-3">
+                <button type="button"
+                        class="btn btn-info"
+                        wire:click="resetStockForm"
+                        data-bs-toggle="modal"
+                        data-bs-target="#stockUpdateModal">
+                    <i class="ri-database-2-line ri-16px me-1"></i> Stock Update
+                </button>
                 <button type="button"
                         class="btn btn-warning"
                         data-bs-toggle="modal"
@@ -29,7 +34,7 @@
                 <div class="modal-dialog modal-md modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Import Products (CSV)</h5>
+                            <h5 class="modal-title">Import Products</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                         </div>
 
@@ -80,6 +85,64 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Stock Update CSV Modal -->
+            <div class="modal fade" id="stockUpdateModal" tabindex="-1" aria-hidden="true" wire:ignore.self>
+                <div class="modal-dialog modal-md modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Update Product Stock</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+
+                        <form wire:submit.prevent="updateStock" enctype="multipart/form-data">
+                            <div class="modal-body">
+
+                                <!-- CSV Upload -->
+                                <div class="mb-3">
+                                    <label class="form-label">Upload Stock CSV File</label>
+                                    <input type="file"
+                                        wire:model="stock_csv"
+                                        class="form-control"
+                                        accept=".csv">
+                                    @error('stock_csv')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
+
+                                <!-- Sample CSV -->
+                                <div class="mb-3">
+                                    <a href="javascript:void(0)"
+                                        wire:click.prevent="downloadStockSample"
+                                    class="btn btn-outline-success btn-sm">
+                                        <i class="ri-download-line me-1"></i> Download Sample CSV
+                                    </a>
+                                </div>
+
+                                @if(session()->has('stock_error'))
+                                    <div class="alert alert-danger">
+                                        {{ session('stock_error') }}
+                                    </div>
+                                @endif
+
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button"
+                                        class="btn btn-secondary"
+                                        data-bs-dismiss="modal">
+                                    Cancel
+                                </button>
+
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="ri-refresh-line me-1"></i> Update Stock
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
 
         <div class="card">
             <div class="card-header">
@@ -180,7 +243,6 @@
             </div>
         </div>
     </div>
-</div>
 @section('page-script')
 <script>
     window.addEventListener('confirmDelete', function (event) {
@@ -205,6 +267,14 @@
     window.addEventListener('closeImportModal', () => {
         const modal = bootstrap.Modal.getInstance(
             document.getElementById('importCsvModal')
+        );
+        modal?.hide();
+    });
+</script>
+<script>
+    window.addEventListener('closeStockModal', () => {
+        const modal = bootstrap.Modal.getInstance(
+            document.getElementById('stockUpdateModal')
         );
         modal?.hide();
     });

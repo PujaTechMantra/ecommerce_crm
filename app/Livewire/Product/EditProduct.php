@@ -260,6 +260,7 @@ class EditProduct extends Component
             ]);
 
             $singleItem->update([
+                'item_code'    => $this->product_code,
                 'base_price'    => $this->base_price,
                 'display_price' => $this->display_price,
                 'specification' => $this->specification,

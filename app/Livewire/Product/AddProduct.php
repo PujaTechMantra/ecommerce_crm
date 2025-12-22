@@ -198,6 +198,7 @@ class AddProduct extends Component
                 'product_id' => $product->id,
                 'product_type' => $this->product_type,
                 'base_price' => $this->base_price,
+                'item_code' => $this->product_code,
                 'display_price' => $this->display_price,
                 'specification' => $this->specification,
             ]);

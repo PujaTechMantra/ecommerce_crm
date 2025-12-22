@@ -34,7 +34,7 @@ return new class extends Migration
         
         DB::table('admins')->insert([
             'name'       => 'Super Admin',
-            'designation'=> null,
+            'designation'=> 1,
             'image'      => null,
             'country_code' => '+91',
             'mobile'     => null,
