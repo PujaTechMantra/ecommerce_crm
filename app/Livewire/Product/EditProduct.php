@@ -161,6 +161,10 @@ class EditProduct extends Component
     // Remove variation row
     public function removeRow($index)
     {
+        if ($this->product_type === 'variation' && count($this->rows) <= 1) {
+            $this->addError('rows', 'At least one variation item is required.');
+            return;
+        }
         if (!empty($this->rows[$index]['existing_images'])) {
             foreach ($this->rows[$index]['existing_images'] as $img) {
                 $this->removed_variation_images[$index][] = $img;
@@ -355,6 +359,16 @@ class EditProduct extends Component
         $this->redirectRoute('admin.product.index', navigate: true);
     }
 
+    protected function messages()
+    {
+        return [
+            'rows.required' => 'At least one variation item is required.',
+            'rows.min'      => 'At least one variation item is required.',
+            'rows.*.images.required' => 'At least one image is required for this variation.',
+            'rows.*.images.min' => 'At least one image is required for this variation.',
+        ];
+    }
+
     protected function validationAttributes()
     {
         $attributes = [];
@@ -394,17 +408,23 @@ class EditProduct extends Component
         }
 
         if ($this->product_type === 'variation') {
+
+            $rules['rows'] = 'required|array|min:1';
+
             foreach ($this->rows as $index => $row) {
                 $rules["rows.$index.color_id"] = 'required';
                 $rules["rows.$index.size_id"] = 'required';
                 $rules["rows.$index.item_code"] = 'required|string|max:100|unique:product_items,item_code,' . ($row['id'] ?? 'NULL') . ',id';
                 $rules["rows.$index.base_price"] = 'required|numeric|min:0';
                 $rules["rows.$index.display_price"] = 'required|numeric|min:0';
-                $rules["rows.$index.images"] = $this->product
-                                            ? 'nullable|array'
-                                            : 'required|array|min:1';
 
-                    $rules["rows.$index.images.*"] = 'image|max:2048';
+                if (empty($row['existing_images'])) {
+                    $rules["rows.$index.images"] = 'required|array|min:1';
+                } else {
+                    $rules["rows.$index.images"] = 'nullable|array';
+                }
+                
+                $rules["rows.$index.images.*"] = 'image|max:2048';
             }
         }
 

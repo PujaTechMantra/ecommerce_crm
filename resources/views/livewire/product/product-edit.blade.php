@@ -278,6 +278,9 @@
         @if($product_type === 'variation')
             <div wire:key="product-type-variation" class="card mb-4">
                 <div class="card-body">
+                    @error('rows')
+                        <div class="alert alert-danger">{{ $message }}</div>
+                    @enderror
                     @foreach($rows as $index => $row)
                         <div class="border p-3 mb-3 position-relative">
                             <div class="row g-2 mb-2">
@@ -366,12 +369,13 @@
                     @endforeach
 
                     <button type="button" wire:click="addRow" class="btn btn-success btn-sm">+ Add Variation</button>
-                    <button wire:click="save" class="btn btn-primary align-right btn-sm">Update Product</button>
 
                 </div>
             </div>
         @endif
-
+        <div class="d-flex justify-content-end">
+            <button wire:click="save" class="btn btn-primary align-right btn-sm">Update Product</button>
+        </div>
     </div>
 </div>
 @section('page-script')

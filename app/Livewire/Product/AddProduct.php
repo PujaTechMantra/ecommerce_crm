@@ -284,7 +284,7 @@ class AddProduct extends Component
         if ($this->product_type === 'single') {
             $rules['base_price']    = 'required|numeric|min:0';
             $rules['display_price'] = 'required|numeric|min:0';
-            $rules['single_image'] = 'nullable|array|min:1';
+            $rules['single_image'] = 'nullable|array';
             $rules['single_image.*'] = 'image';
         }
 

@@ -129,6 +129,8 @@
                         <tr>
                             <th>#</th>
                             <th>Product</th>
+                            <th>Product Type</th>
+                            <th>Product Code</th>
                             <th>Collection</th>
                             <th>Category</th>
                             <th>Sub-Category</th>
@@ -141,6 +143,8 @@
                         <tr>
                             <td>{{ $products->firstItem() + $index }}</td>
                             <td>{{ $product->title }}</td>
+                            <td>{{ ucfirst($product->product_type) }}</td>
+                            <td>{{ $product->product_sku }}</td>
                             <td>{{ $product->collection->name ?? 'NA' }}</td>
                             <td>{{ $product->category->title ?? 'NA' }}</td>
                             <td>{{ $product->subCategory->title ?? 'NA' }}</td>

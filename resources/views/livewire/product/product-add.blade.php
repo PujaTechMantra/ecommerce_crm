@@ -334,17 +334,23 @@
 
                     </div>
                     @endforeach
-
                     <button type="button"
                             wire:click="addRow"
-                            class="btn btn-primary btn-sm mt-2">
+                            class="btn btn-success btn-sm mt-2">
                         + Add Variation
                     </button>
-
                 </div>
                 @endif
+               
             </div>
         </div>
+            <div class="d-flex justify-content-end">
+                <button type="button"
+                    wire:click="save"
+                    class="btn btn-primary btn-sm mt-2">
+                    Publish Product
+                </button>
+            </div>
     </div>
 </div>
 @section('page-script')
