@@ -4,22 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ProductImage extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'product_item_id',  // The ID of the product this image belongs to
-        'image',       // The file path of the image
+        'product_item_id',  
+        'image',
+        'deleted_at',       
     ];
-
-    // Define the relationship with the Product model
-    // public function product()
-    // {
-    //     return $this->belongsTo(Product::class);
-    // }
-
     public function item()
     {
         return $this->belongsTo(ProductItem::class, 'product_item_id');

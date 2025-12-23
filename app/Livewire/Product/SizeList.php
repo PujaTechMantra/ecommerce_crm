@@ -71,8 +71,9 @@ class SizeList extends Component
 
     public function delete($id)
     {
-        $size = Size::findOrFail($id);
-        $size->delete(); 
+        $color = Size::findOrFail($id);
+        $color->delete(); // Soft delete
+
         session()->flash('success', 'Size deleted successfully!');
     }
 

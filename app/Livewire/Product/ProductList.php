@@ -377,17 +377,12 @@ class ProductList extends Component
     public function destroy($id)
     {
         $product = Product::findOrFail($id);
-
+        // Soft delete related items
         ProductItem::where('product_id', $product->id)->delete();
-        
-        $product->deleted_at = now();
-        $product->save();
-
-        // ProductItem::where('product_id', $product->id)
-        //     ->update(['deleted_at' => now()]);
+        // Soft delete product
+        $product->delete();
 
         session()->flash('success', 'Product deleted successfully!');
-
     }
 
 }

@@ -75,11 +75,10 @@ class ColorList extends Component
 
     public function delete($id)
     {
-        $color =  Color::findOrFail($id);
-        $color->deleted_at = now();
-        $color->save();
-        session()->flash('success', 'Color deleted successfully!');
+        $color = Color::findOrFail($id);
+        $color->delete(); // Soft delete
 
+        session()->flash('success', 'Color deleted successfully!');
     }
 
     public function resetForm()

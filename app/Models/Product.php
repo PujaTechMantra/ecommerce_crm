@@ -60,28 +60,4 @@ class Product extends Model
     {
         return env('DEFAULT_RENT_DURATION', 30);
     }
-
-    // public function stock()
-    // {
-    //     return $this->hasOne(Stock::class);
-    // }
-    // public function features()
-    // {
-    //     return $this->hasMany(ProductFeature::class);
-    // }
-    // public function rentalprice()
-    // {
-    //     return $this->hasMany(RentalPrice::class)->orderBy('duration', 'ASC')->where('status',1);
-    // }
-    // public function stock_item(){
-    //     return $this->hasMany(Stock::class, 'product_id', 'id');
-    // }
-    // public function payment_item(){
-    //     return $this->hasMany(PaymentItem::class, 'product_id', 'id');
-    // }
-    
-    // public function types()
-    // {
-    //     return $this->belongsToMany(ProductType::class);
-    // }
 }

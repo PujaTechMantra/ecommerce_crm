@@ -52,13 +52,15 @@ class EditProduct extends Component
 
     public function mount($productId)
     {
-        $product = Product::with('items')->findOrFail($productId);
+        $product = Product::with(['items.images'])->findOrFail($productId);
         $this->product = $product;
 
         // Load collections, colors, sizes
-        $this->collections = Collection::all();
-        $this->colors = Color::all();
-        $this->sizes = Size::all();
+        $this->collections   = Collection::where('status', 1)->get();
+        $this->colors        = Color::where('status', 1)->get();
+        $this->sizes         = Size::where('status', 1)->get();
+        $this->categories    = Category::where('status', 1)->get();
+        $this->subcategories = SubCategory::where('status', 1)->get();
 
         // Main product data
         $this->collection_id = $product->collection_id;
@@ -74,8 +76,12 @@ class EditProduct extends Component
         $this->meta_keyword     = $product->meta_keyword;
 
         // Filter categories & subcategories
-        $this->categories = Category::where('collection_id', $this->collection_id)->get();
-        $this->subcategories = SubCategory::where('category_id', $this->cat_id)->get();
+        $this->categories = Category::where('collection_id', $this->collection_id)
+                                ->where('status', 1)
+                                ->get();
+        $this->subcategories = SubCategory::where('category_id', $this->cat_id)
+                                      ->where('status', 1)
+                                      ->get();
 
         // Load items
         if ($this->product_type === 'single') {
@@ -111,7 +117,9 @@ class EditProduct extends Component
     // Filter categories based on selected collection
     public function updatedCollectionId()
     {
-        $this->categories = Category::where('collection_id', $this->collection_id)->get();
+        $this->categories = Category::where('collection_id', $this->collection_id)
+                ->where('status', 1)
+                ->get();
         $this->cat_id = null;
         $this->subcat_id = null;
         $this->subcategories = [];
@@ -120,7 +128,10 @@ class EditProduct extends Component
     // Filter subcategories based on selected category
     public function updatedCatId()
     {
-        $this->subcategories = $this->cat_id ? SubCategory::where('category_id', $this->cat_id)->get() : [];
+        $this->subcategories = $this->cat_id 
+                            ? SubCategory::where('category_id', $this
+                            ->where('status', 1)
+                            ->cat_id)->get() : [];
         $this->subcat_id = null;
     }
 

@@ -128,12 +128,7 @@ class MasterCategory extends Component
     {
         $category = Category::findOrFail($id);
 
-        $category->deleted_at = now();
-        $category->save();
-
-        // Soft delete all related subcategories manually
-        SubCategory::where('category_id', $id)
-            ->update(['deleted_at' => now()]);
+        $category->delete(); // soft delete
 
         session()->flash('message', 'Category deleted successfully!');
     }

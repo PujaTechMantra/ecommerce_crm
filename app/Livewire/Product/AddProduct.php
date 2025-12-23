@@ -72,20 +72,20 @@ class AddProduct extends Component
     public $colors = [];
     public $sizes = [];
 
-      public function mount(Product $product = null)
+    public function mount(Product $product = null)
     {
         $this->product = $product;
 
-        $this->collections = Collection::all();
-        $this->categories  = Category::all();
-        $this->subcategories = SubCategory::all();
-        $this->colors      = Color::all();
-        $this->sizes       = Size::all();
+        $this->collections   = Collection::where('status', 1)->get();
+        $this->categories    = Category::where('status', 1)->get();
+        $this->subcategories = SubCategory::where('status', 1)->get();
+        $this->colors        = Color::where('status', 1)->get();
+        $this->sizes         = Size::where('status', 1)->get();
 
         if ($product) {
             $this->collection_id = $product->collection_id;
-            $this->cat_id = $product->cat_id;
-            $this->subcat_id = $product->subcat_id ?? null;
+            $this->cat_id = $product->category_id;
+            $this->subcat_id = $product->sub_category_id ?? null;
             $this->title = $product->title;
             $this->short_desc = $product->short_desc;
             $this->desc = $product->desc;
@@ -99,13 +99,13 @@ class AddProduct extends Component
             $this->only_for = $product->only_for;
             $this->status = $product->status;
 
-            $this->rows = $product->options->map(function($option) {
+            $this->rows = $product->items->map(function($item) {
                 return [
-                    'color_id' => $option->color_id,
-                    'size_id' => $option->size_id,
-                    'item_code' => $option->item_code,
-                    'base_price' => $option->price,
-                    'display_price' => $option->offer_price,
+                    'color_id' => $item->color_id,
+                    'size_id' => $item->size_id,
+                    'item_code' => $item->item_code,
+                    'base_price' => $item->price,
+                    'display_price' => $item->offer_price,
                 ];
             })->toArray();
 
@@ -120,7 +120,9 @@ class AddProduct extends Component
     // Filter categories by selected collection
     public function updatedCollectionId()
     {
-        $this->categories = Category::where('collection_id', $this->collection_id)->get();
+        $this->categories = Category::where('collection_id', $this->collection_id)
+                    ->where('status', 1)
+                    ->get();
         $this->cat_id = null;
         $this->subcat_id = null;
         $this->subcategories = [];
@@ -129,7 +131,9 @@ class AddProduct extends Component
     // Filter subcategories by selected category
     public function updatedCatId()
     {
-        $this->subcategories = $this->cat_id ? SubCategory::where('category_id', $this->cat_id)->get() : [];
+        $this->subcategories = $this->cat_id ? SubCategory::where('category_id', $this->cat_id)
+                ->where('status', 1)
+                ->get() : [];
         $this->subcat_id = null;
     }
 

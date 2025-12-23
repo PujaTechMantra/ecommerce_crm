@@ -121,10 +121,11 @@ class MasterSubCategory extends Component
 
     public function destroy($id)
     {
-       $subcategory =  SubCategory::findOrFail($id);
-       $subcategory->deleted_at = now();
-       $subcategory->save();
-       session()->flash('message', 'Subcategory deleted successfully!');
+        $subcategory = SubCategory::findOrFail($id);
+
+        $subcategory->delete(); // soft delete
+
+        session()->flash('message', 'Subcategory deleted successfully!');
     }
 
     public function toggleStatus($id)
