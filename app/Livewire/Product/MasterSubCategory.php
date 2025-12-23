@@ -116,7 +116,7 @@ class MasterSubCategory extends Component
         $this->resetForm();
     }
 
-    public function destroy($id)
+    public function delete($id)
     {
         $subcategory = SubCategory::findOrFail($id);
 

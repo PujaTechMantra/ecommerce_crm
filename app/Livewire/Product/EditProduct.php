@@ -406,11 +406,16 @@ class EditProduct extends Component
             'title'             => 'required|string|max:255',
             'product_code'      => 'required|string|max:100|unique:products,product_sku,' . $this->product->id,
             'product_type'      => 'required',
-            'image'             => 'nullable|image',
             'meta_title'        => 'nullable|string|max:255',
             'meta_description'  => 'nullable|string|max:500',
             'meta_keyword'      => 'nullable|string|max:500',
         ];
+
+        if (!$this->product->image && !$this->image) {
+            $rules['image'] = 'required|image|max:2048';
+        } else {
+            $rules['image'] = 'nullable|image|max:2048';
+        }
 
         if ($this->product_type === 'single') {
             $rules['base_price'] = 'required|numeric|min:0';

@@ -64,7 +64,7 @@ class ColorList extends Component
         $this->ActiveCreateTab(1);
     }
     
-      public function toggleStatus($id)
+    public function toggleStatus($id)
     {
         $color = Color::findOrFail($id);
         $color->status = !$color->status;
@@ -73,7 +73,7 @@ class ColorList extends Component
         session()->flash('message', 'Size status updated successfully!');
     }
 
-    public function delete($id)
+    public function destroy($id)
     {
         $color = Color::findOrFail($id);
         $color->delete(); // Soft delete
