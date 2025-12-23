@@ -46,21 +46,16 @@ class ProductList extends Component
 
     public function mount()
     {
-
         $this->collections = Collection::where('status', 1)
-            ->where('is_deleted', 0)
             ->orderBy('id', 'DESC')
             ->get();
 
         $this->categories = Category::where('status', 1)
-            ->where('deleted_at', null)
             ->orderBy('id', 'DESC')
             ->get();
         $this->subCategories = SubCategory::where('status', 1)
-            ->where('deleted_at', null)
             ->orderBy('id', 'DESC')
             ->get();
-            
     }
 
     public function updating($field)
@@ -255,8 +250,6 @@ class ProductList extends Component
 
             $items = ProductItem::query()
                 ->join('products', 'products.id', '=', 'product_items.product_id')
-                ->whereNull('products.deleted_at')
-                ->whereNull('product_items.deleted_at')
                 ->select(
                     'products.product_sku',
                     'product_items.item_code'
@@ -349,8 +342,7 @@ class ProductList extends Component
 
     public function render()
     {
-        $query = Product::with(['items', 'category'])
-            ->whereNull('deleted_at');
+        $query = Product::with(['items', 'category']);
 
         if ($this->collection_id) {
             $query->where('collection_id', $this->collection_id);
@@ -377,8 +369,18 @@ class ProductList extends Component
     public function destroy($id)
     {
         $product = Product::findOrFail($id);
-        // Soft delete related items
-        ProductItem::where('product_id', $product->id)->delete();
+
+        // Soft delete all related product items and their images
+        $items = $product->items; 
+
+        foreach ($items as $item) {
+            // Delete related images
+            foreach ($item->images as $image) {
+                $image->delete(); // soft delete image
+            }
+            $item->delete(); // soft delete product item
+        }
+        
         // Soft delete product
         $product->delete();
 

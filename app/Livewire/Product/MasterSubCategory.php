@@ -26,7 +26,6 @@ class MasterSubCategory extends Component
     public function mount()
     {
         $this->collections = Collection::where('status', 1)
-            ->where('is_deleted', 0)
             ->orderBy('name')
             ->get();
 
@@ -40,7 +39,6 @@ class MasterSubCategory extends Component
         $this->category_id = null;
         $this->categories = Category::where('collection_id', $value)
             ->where('status', 1)
-            ->whereNull('deleted_at')
             ->orderBy('title')
             ->get();
     }
@@ -86,7 +84,6 @@ class MasterSubCategory extends Component
         // Load categories of that collection
         $this->categories = Category::where('collection_id', $this->collection_id)
             ->where('status', 1)
-            ->whereNull('deleted_at')
             ->orderBy('title')
             ->get();
 

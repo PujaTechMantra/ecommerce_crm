@@ -23,15 +23,14 @@ class CollectionList extends Component
     protected function rules()
     {
         return [
-            'name'  => 'required|string|max:255|unique:collections,name,NULL,id,is_deleted,0',
+            'name'  => 'required|string|max:255|unique:collections,name,'.$this->collectionId,
             'image' => 'nullable|image|max:10240',
         ];
     }
 
     public function render()
     {
-        $collections = Collection::where('is_deleted', 0)
-            ->where('name', 'like', '%' . trim($this->search) . '%')
+        $collections = Collection::where('name', 'like', '%' . trim($this->search) . '%')
             ->orderBy('id', 'desc')
             ->paginate(20);
 
@@ -71,7 +70,7 @@ class CollectionList extends Component
     public function update()
     {
         $this->validate([
-            'name'  => 'required|string|max:255|unique:collections,name,' . $this->collectionId . ',id,is_deleted,0',
+            'name'  => 'required|string|max:255|unique:collections,name,' . $this->collectionId,
             'image' => 'nullable|image|max:10240',
         ]);
 
@@ -104,36 +103,18 @@ class CollectionList extends Component
         session()->flash('message', 'Status updated successfully.');
     }
 
-    // public function destroy($id)
-    // {
-    //     $c = Collection::findOrFail($id);
-    //     $c->is_deleted = 1;
-    //     $c->save();
-
-    //     session()->flash('message', 'Collection deleted successfully.');
-    // }
-
     public function destroy($id)
     {
         $collection = Collection::findOrFail($id);
 
-        // Soft delete the collection
-        $collection->is_deleted = 1;
-        $collection->save();
-
-        // Soft delete all categories under this collection
-        $categories = $collection->categories()->get();
-        foreach ($categories as $category) {
-            $category->deleted_at = now();
-            $category->save();
-
-            // Soft delete all subcategories under this category
-            $subcategories = $category->subcategories()->get();
-            foreach ($subcategories as $sub) {
-                $sub->deleted_at = now();
-                $sub->save();
-            }
+        // Soft delete all categories and their subcategories
+        foreach ($collection->categories as $category) {
+            $category->subcategories()->delete(); // Soft delete subcategories
+            $category->delete(); // Soft delete category
         }
+
+        // Soft delete the collection
+        $collection->delete();
 
         session()->flash('message', 'Collection deleted successfully.');
     }

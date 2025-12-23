@@ -47,13 +47,11 @@ class MasterCategory extends Component
     public function mount()
     {
         $this->collections = Collection::where('status', 1)
-                                    ->where('is_deleted', 0)
                                     ->get();
     }
     public function render()
     {
         $this->categories = Category::with('collection')
-            ->whereNull('deleted_at')
             ->where('title', 'like', '%' . trim($this->search) . '%')
             ->orderBy('id', 'DESC')
             ->get();
