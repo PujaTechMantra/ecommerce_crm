@@ -9,9 +9,6 @@ use Illuminate\Support\Facades\DB;
 
 use Symfony\Component\DomCrawler\Crawler;
 
-use App\Livewire\Product\CollectionList;
-use App\Livewire\Product\ProductList;
-
 use App\Http\Controllers\Admin\CronController;
 use GuzzleHttp\Client;
 use App\Livewire\Organization\{OrgDashboard};
@@ -22,7 +19,8 @@ use App\Livewire\Admin\{
     PaymentVehicleSummary, RefundSummary, ChangePassword,AdminOrganizationIndex,AdminOrganizationDashboard,AdminOrganizationInvoices,AdminOrganizationPayments,PushNotificationList
 };
 use App\Livewire\Product\{
-    MasterCategory, MasterSubCategory, ColorList, SizeList, MasterProduct, AddProduct, EditProduct, UpdateProduct,
+    CollectionList, MasterCategory, MasterSubCategory, ColorList, SizeList, ProductList,
+    AddProduct, EditProduct,CouponList,
     GalleryIndex, StockProduct, MasterProductType, ProductWiseVehicle, VehicleList,
     MasterSubscription, VehicleCreate, VehicleUpdate, VehicleDetail, VehiclePaymentSummary,
     BomPartList, SellingQuery
@@ -79,6 +77,7 @@ Route::middleware(['auth:admin', 'admin.maintenance'])->prefix('admin')->group(f
         Route::get('/sub-categories', MasterSubCategory::class)->name('admin.product.sub_categories');
         Route::get('/colors', ColorList::class)->name('admin.product.colors');
         Route::get('/sizes', SizeList::class)->name('admin.product.sizes');
+        Route::get('/coupons', CouponList::class)->name('admin.product.coupons');
         Route::get('/list', ProductList::class)->name('admin.product.index');
         Route::get('/new', AddProduct::class)->name('admin.product.add');
         Route::get('/edit/{productId}', EditProduct::class)->name('admin.product.edit');
@@ -92,7 +91,6 @@ Route::middleware(['auth:admin', 'admin.maintenance'])->prefix('admin')->group(f
     // Product Routes
     Route::group(['prefix' => 'models'], function () {
         Route::get('/keywords', MasterProductType::class)->name('admin.product.type');
-        Route::get('/new', AddProduct::class)->name('admin.product.add');
         Route::get('/subscriptions', MasterSubscription::class)->name('admin.model.subscriptions');
     });
 

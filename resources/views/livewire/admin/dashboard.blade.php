@@ -42,7 +42,7 @@
                   <div class="d-flex justify-content-between align-items-start">
                     <div>
                       <p class="mb-1 fw-semibold">Total Vehicles</p>
-                      <h4 class="mb-0">{{ $all_vehicles }}</h4>
+                      <h4 class="mb-0"></h4>
                     </div>
                     <span class="text-dark small"><i class="ri-arrow-up-line"></i></span>
                   </div>
@@ -57,9 +57,9 @@
                   <div class="d-flex justify-content-between align-items-start">
                     <div>
                       <p class="mb-1 fw-semibold">Assigned Vehicles</p>
-                      <h4 class="mb-0">{{ $assigned_vehicles }}</h4>
+                      <h4 class="mb-0"></h4>
                     </div>
-                    <span class="text-dark small"><i class="ri-arrow-up-line"></i> +{{ $assigned_percent }}%</span>
+                    <span class="text-dark small"><i class="ri-arrow-up-line"></i></span>
                   </div>
                 </div>
               </div>
@@ -72,9 +72,9 @@
                   <div class="d-flex justify-content-between align-items-start">
                     <div>
                       <p class="mb-1 fw-semibold">Unassigned Vehicles</p>
-                      <h4 class="mb-0">{{ $unassigned_vehicles }}</h4>
+                      <h4 class="mb-0"></h4>
                     </div>
-                    <span class="text-dark small"><i class="ri-arrow-up-line"></i> +{{ $unassigned_percent }}%</span>
+                    <span class="text-dark small"><i class="ri-arrow-up-line"></i></span>
                   </div>
                 </div>
               </div>
@@ -87,9 +87,9 @@
                   <div class="d-flex justify-content-between align-items-start">
                     <div>
                       <p class="mb-1 fw-semibold">Overdue Vehicles</p>
-                      <h4 class="mb-0">{{ $overdue_vehicles }}</h4>
+                      <h4 class="mb-0"></h4>
                     </div>
-                    <span class="text-dark small"><i class="ri-arrow-up-line"></i> +{{ $overdue_percent }}%</span>
+                    <span class="text-dark small"><i class="ri-arrow-up-line"></i> </span>
                   </div>
                 </div>
               </div>

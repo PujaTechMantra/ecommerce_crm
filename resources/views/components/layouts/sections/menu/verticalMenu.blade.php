@@ -56,6 +56,12 @@
                   <div>Sizes</div>
                 </a>
               </li>
+              <li class="menu-item {{ (request()->is('admin/master/coupons*')) ? 'open' : '' }}">
+                <a href="{{route('admin.product.coupons')}}" class="menu-link">
+                  <div>Coupons</div>
+                </a>
+              </li>
+              
               
               <li class="menu-item {{ (request()->is('admin/master/list*')) ? 'open' : '' }}">
                 <a href="{{route('admin.product.index')}}" class="menu-link">
