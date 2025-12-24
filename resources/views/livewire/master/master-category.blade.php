@@ -51,7 +51,7 @@
                                             <img src="{{ asset('storage/'.$category->image) }}" width="40" height="40"
                                                 class="rounded">
                                         @else
-                                            <span class="text-muted">No Image</span>
+                                            <img src="{{ asset('assets/img/placeholder-product.jpg') }}" width="40" height="40" class="rounded">
                                         @endif
                                     </td>
 

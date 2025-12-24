@@ -12,13 +12,13 @@
     @if($active_tab==1)
         <div class="col-lg-12 d-flex justify-content-end mb-3">
             <button class="btn btn-primary" wire:click="ActiveCreateTab(2)">
-                Create New Size
+                <i class="ri-add-line ri-16px me-1"></i>Create New Size
             </button>
         </div>
     @else
         <div class="col-lg-12 d-flex justify-content-end mb-3">
             <button class="btn btn-dark btn-sm" wire:click="ActiveCreateTab(1)">
-                Back
+                <i class="ri-arrow-go-back-line"></i>Back
             </button>
         </div>
     @endif

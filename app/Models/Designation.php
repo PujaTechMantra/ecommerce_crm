@@ -9,7 +9,7 @@ class Designation extends Model
     protected $table = "designations";
 
     protected $fillable = [
-        'title'
+        'name'
     ];
     public function permissions()
     {
