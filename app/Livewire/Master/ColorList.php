@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Product;
+namespace App\Livewire\Master;
 
 use Livewire\Component;
 use App\Models\Color;
@@ -16,7 +16,7 @@ class ColorList extends Component
     protected function rules()
     {
         return [
-            'title' => 'required|string|max:255',
+            'title' => 'required|string|max:255|unique:colors,name,' . $this->color_id,
             'code'  => 'required|string|max:255',
         ];
     }
@@ -94,6 +94,6 @@ class ColorList extends Component
             ->latest()
             ->get(); 
 
-        return view('livewire.product.color-list', compact('colors'));
+        return view('livewire.master.color-list', compact('colors'));
     }
 }

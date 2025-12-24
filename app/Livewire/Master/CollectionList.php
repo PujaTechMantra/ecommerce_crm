@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Product;
+namespace App\Livewire\Master;
 
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -34,7 +34,7 @@ class CollectionList extends Component
             ->orderBy('id', 'desc')
             ->paginate(20);
 
-        return view('livewire.product.collection-list', compact('collections'));
+        return view('livewire.master.collection-list', compact('collections'));
     }
 
 

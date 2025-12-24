@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Product;
+namespace App\Livewire\Master;
 
 use Livewire\Component;
 use App\Models\Category;
@@ -156,7 +156,7 @@ class MasterSubCategory extends Component
     // {
         
     //     $subcategories = SubCategory::with('category.collection')->paginate(5);
-    //     return view('livewire.product.master-sub-category', [
+    //     return view('livewire.master.master-sub-category', [
     //         'subcategories' => $subcategories
     //     ]);
     // }
@@ -168,7 +168,7 @@ class MasterSubCategory extends Component
             })
             ->paginate(5);
 
-        return view('livewire.product.master-sub-category', [
+        return view('livewire.master.master-sub-category', [
             'subcategories' => $subcategories
         ]);
     }

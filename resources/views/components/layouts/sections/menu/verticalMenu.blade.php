@@ -32,40 +32,33 @@
             </a>
             <ul class="menu-sub">
               <li class="menu-item {{ (request()->is('admin/master/collections*')) ? 'open' : '' }}">
-                <a href="{{route('admin.product.collections')}}" class="menu-link">
+                <a href="{{route('admin.master.collections')}}" class="menu-link">
                   <div>Collections</div>
                 </a>
               </li>
               <li class="menu-item {{ (request()->is('admin/master/categories*')) ? 'open' : '' }}">
-                <a href="{{route('admin.product.categories')}}" class="menu-link">
+                <a href="{{route('admin.master.categories')}}" class="menu-link">
                   <div>Categories</div>
                 </a>
               </li>
               <li class="menu-item {{ (request()->is('admin/master/sub-categories*')) ? 'open' : '' }}">
-                <a href="{{route('admin.product.sub_categories')}}" class="menu-link">
+                <a href="{{route('admin.master.sub_categories')}}" class="menu-link">
                   <div>Sub Categories</div>
                 </a>
               </li>
               <li class="menu-item {{ (request()->is('admin/master/colors*')) ? 'open' : '' }}">
-                <a href="{{route('admin.product.colors')}}" class="menu-link">
+                <a href="{{route('admin.master.colors')}}" class="menu-link">
                   <div>Colors</div>
                 </a>
               </li>
               <li class="menu-item {{ (request()->is('admin/master/sizes*')) ? 'open' : '' }}">
-                <a href="{{route('admin.product.sizes')}}" class="menu-link">
+                <a href="{{route('admin.master.sizes')}}" class="menu-link">
                   <div>Sizes</div>
                 </a>
               </li>
               <li class="menu-item {{ (request()->is('admin/master/coupons*')) ? 'open' : '' }}">
-                <a href="{{route('admin.product.coupons')}}" class="menu-link">
+                <a href="{{route('admin.master.coupons')}}" class="menu-link">
                   <div>Coupons</div>
-                </a>
-              </li>
-              
-              
-              <li class="menu-item {{ (request()->is('admin/master/list*')) ? 'open' : '' }}">
-                <a href="{{route('admin.product.index')}}" class="menu-link">
-                  <div>Products</div>
                 </a>
               </li>
             </ul>
@@ -92,6 +85,20 @@
               </li>
             </ul> -->
           </li>
+
+        <li class="menu-item {{ (request()->is('admin/product*')) ? 'open' : '' }}">
+          <a href="#" class="menu-link menu-toggle waves-effect" target="_blank">
+            <i class="menu-icon tf-icons ri-shopping-bag-3-line"></i>
+            <div>Product Management</div>
+          </a>
+          <ul class="menu-sub">
+            <li class="menu-item {{ (request()->is('admin/product/list*')) ? 'open' : '' }}">
+              <a href="{{route('admin.product.index')}}" class="menu-link">
+                <div>List</div>
+              </a>
+            </li>
+          </ul>
+        </li>
         <li class="menu-item {{ (request()->is('admin/employee*')) ? 'open' : '' }}">
           <a href="#" class="menu-link menu-toggle waves-effect" target="_blank">
             <i class="menu-icon tf-icons ri-group-line"></i>

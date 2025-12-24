@@ -107,8 +107,11 @@
                 <thead>
                     <tr>
                         <th>#</th>
+                        <th>Name</th>
                         <th>Code</th>
+                        <th>Coupon Type</th>
                         <th>Amount</th>
+                        <th>Validity</th>
                         <th>Status</th>
                         <th>Action</th>
                     </tr>
@@ -117,8 +120,18 @@
                 @foreach($coupons as $coupon)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
+                        <td>{{ $coupon->name }}</td>
                         <td>{{ $coupon->coupon_code }}</td>
+                        <td>{{ $coupon->coupon_type == 1 ? 'Percentage' : 'Flat' }}</td>
                         <td>{{ $coupon->amount }}</td>
+                        <td> 
+                           {{ \Carbon\Carbon::parse($coupon->start_date)->format('d M Y') }}
+                            -
+                            {{ $coupon->end_date
+                                ? \Carbon\Carbon::parse($coupon->end_date)->format('d M Y')
+                                : 'N/A'
+                            }}
+                        </td>
                        <td class="align-middle text-sm text-center">
                             <div class="form-check form-switch">
                                 <input

@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Livewire\Product;
+namespace App\Livewire\Master;
 
 use Livewire\Component;
 use App\Models\Size;
 
 class SizeList extends Component
 {
-     public $active_tab = 1;
+    public $active_tab = 1;
 
     public $size_id;
     public $title;
@@ -16,7 +16,7 @@ class SizeList extends Component
     protected function rules()
     {
         return [
-            'title' => 'required|string|max:255',
+            'title' => 'required|string|max:255|unique:sizes,name,' . $this->size_id,
         ];
     }
 
@@ -90,6 +90,6 @@ class SizeList extends Component
             ->latest()
             ->get();
 
-        return view('livewire.product.size-list', compact('sizes'));
+        return view('livewire.master.size-list', compact('sizes'));
     }
 }

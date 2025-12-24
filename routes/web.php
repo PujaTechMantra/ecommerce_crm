@@ -19,14 +19,14 @@ use App\Livewire\Admin\{
     PaymentVehicleSummary, RefundSummary, ChangePassword,AdminOrganizationIndex,AdminOrganizationDashboard,AdminOrganizationInvoices,AdminOrganizationPayments,PushNotificationList
 };
 use App\Livewire\Product\{
-    CollectionList, MasterCategory, MasterSubCategory, ColorList, SizeList, ProductList,
-    AddProduct, EditProduct,CouponList,
+    ProductList, AddProduct, EditProduct,
     GalleryIndex, StockProduct, MasterProductType, ProductWiseVehicle, VehicleList,
     MasterSubscription, VehicleCreate, VehicleUpdate, VehicleDetail, VehiclePaymentSummary,
     BomPartList, SellingQuery
 };
 
 use App\Livewire\Master\{
+    CollectionList, MasterCategory, MasterSubCategory, ColorList, SizeList, CouponList,
     BannerIndex, FaqIndex, WhyEwentIndex, EmployeeManagementList, EmployeeManagementCreate,
     EmployeeManagementUpdate, DesignationIndex, DesignationPermissionList
 };
@@ -72,15 +72,12 @@ Route::middleware(['auth:admin', 'admin.maintenance'])->prefix('admin')->group(f
 
       // Product Routes
     Route::group(['prefix' => 'master'], function () {
-        Route::get('/collections', CollectionList::class)->name('admin.product.collections');
-        Route::get('/categories', MasterCategory::class)->name('admin.product.categories');
-        Route::get('/sub-categories', MasterSubCategory::class)->name('admin.product.sub_categories');
-        Route::get('/colors', ColorList::class)->name('admin.product.colors');
-        Route::get('/sizes', SizeList::class)->name('admin.product.sizes');
-        Route::get('/coupons', CouponList::class)->name('admin.product.coupons');
-        Route::get('/list', ProductList::class)->name('admin.product.index');
-        Route::get('/new', AddProduct::class)->name('admin.product.add');
-        Route::get('/edit/{productId}', EditProduct::class)->name('admin.product.edit');
+        Route::get('/collections', CollectionList::class)->name('admin.master.collections');
+        Route::get('/categories', MasterCategory::class)->name('admin.master.categories');
+        Route::get('/sub-categories', MasterSubCategory::class)->name('admin.master.sub_categories');
+        Route::get('/colors', ColorList::class)->name('admin.master.colors');
+        Route::get('/sizes', SizeList::class)->name('admin.master.sizes');
+        Route::get('/coupons', CouponList::class)->name('admin.master.coupons');
 
         Route::get('/banner', BannerIndex::class)->name('admin.banner.index');
         Route::get('/faq', FaqIndex::class)->name('admin.faq.index');
@@ -88,7 +85,13 @@ Route::middleware(['auth:admin', 'admin.maintenance'])->prefix('admin')->group(f
         Route::get('/policy-details', PolicyDetails::class)->name('admin.policy-details');
     });
 
-    // Product Routes
+    Route::group(['prefix' => 'product'], function () {
+        Route::get('/list', ProductList::class)->name('admin.product.index');
+        Route::get('/new', AddProduct::class)->name('admin.product.add');
+        Route::get('/edit/{productId}', EditProduct::class)->name('admin.product.edit');
+    });
+
+
     Route::group(['prefix' => 'models'], function () {
         Route::get('/keywords', MasterProductType::class)->name('admin.product.type');
         Route::get('/subscriptions', MasterSubscription::class)->name('admin.model.subscriptions');

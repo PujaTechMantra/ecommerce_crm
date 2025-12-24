@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Livewire\Product;
+namespace App\Livewire\Master;
 
 use Livewire\Component;
 use App\Models\Coupon;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class CouponList extends Component
 {
@@ -26,7 +27,7 @@ class CouponList extends Component
     {
         return [
             'name' => 'required|string|max:255',
-            'coupon_code' => 'required|string|max:255',
+            'coupon_code' => 'required|string|max:255|unique:coupons,coupon_code,' . $this->coupon_id,
             'coupon_type' => 'required|in:1,2',
             'amount' => 'required|numeric',
             'max_time_of_use' => 'required|integer',
@@ -82,8 +83,8 @@ class CouponList extends Component
         $this->amount = $coupon->amount;
         $this->max_time_of_use = $coupon->max_time_of_use;
         $this->max_time_one_can_use = $coupon->max_time_one_can_use;
-        $this->start_date = $coupon->start_date;
-        $this->end_date = $coupon->end_date;
+        $this->start_date = Carbon::parse($coupon->start_date)->format('Y-m-d');
+        $this->end_date   = Carbon::parse($coupon->end_date)->format('Y-m-d');
 
         $this->active_tab = 3;
     }
@@ -138,6 +139,6 @@ class CouponList extends Component
             ->latest()
             ->get();
 
-        return view('livewire.product.coupon-list', compact('coupons'));
+        return view('livewire.master.coupon-list', compact('coupons'));
     }
 }

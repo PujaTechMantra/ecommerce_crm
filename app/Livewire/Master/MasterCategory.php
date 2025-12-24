@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Product;
+namespace App\Livewire\Master;
 
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -56,7 +56,7 @@ class MasterCategory extends Component
             ->orderBy('id', 'DESC')
             ->get();
 
-        return view('livewire.product.master-category');
+        return view('livewire.master.master-category');
     }
 
     public function save()
