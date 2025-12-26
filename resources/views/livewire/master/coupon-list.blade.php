@@ -138,7 +138,7 @@
                                 {{ $coupon->value }}%
                             @endif
                         </td>
-                        <td>{{ $coupon->min_amount ? $coupon->min_amount : 'N/A'}}</td>
+                        <td>{{ $coupon->min_amount ? '₹'.$coupon->min_amount : 'N/A'}}</td>
                         <td> 
                            {{ \Carbon\Carbon::parse($coupon->start_date)->format('d M Y') }}
                             -

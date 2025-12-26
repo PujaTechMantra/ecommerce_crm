@@ -17,6 +17,7 @@ class ProductItem extends Model
         'item_code',
         'base_price',
         'display_price',
+        'quantity',
         'image',
         'status',
         'specification',
@@ -30,6 +31,16 @@ class ProductItem extends Model
     public function images()
     {
         return $this->hasMany(ProductImage::class, 'product_item_id');
+    }
+
+    public function color()
+    {
+        return $this->belongsTo(Color::class);
+    }
+
+    public function size()
+    {
+        return $this->belongsTo(Size::class);
     }
 
 }

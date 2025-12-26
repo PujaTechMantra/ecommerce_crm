@@ -143,13 +143,10 @@
                 </div>
             </div>
 
-
         <div class="card">
             <div class="card-header">
                 <h5>Product List</h5>
                 <div class="row g-2">
-                
-
                     <div class="col-md-3">
                         <label>Collection</label>
                         <select wire:model.live="collection_id" class="form-select">
@@ -197,6 +194,7 @@
                             <th>Collection</th>
                             <th>Category</th>
                             <th>Sub-Category</th>
+                            <th>Stock</th>
                             <th>Status</th>
                             <th>Actions</th>
                         </tr>
@@ -211,6 +209,13 @@
                             <td>{{ $product->collection->name ?? 'NA' }}</td>
                             <td>{{ $product->category->title ?? 'NA' }}</td>
                             <td>{{ $product->subCategory->title ?? 'NA' }}</td>
+                            <td>
+                                <button
+                                    class="btn btn-sm btn-outline-info"
+                                    wire:click="openStockView({{ $product->id }})">
+                                    Stock
+                                </button>
+                            </td>
                             <td>
                                 <div class="form-check form-switch">
                                     <input
@@ -237,6 +242,53 @@
                     </tbody>
                 </table>
 
+                <!-- Product Stock View Modal -->
+                <div wire:ignore.self class="modal fade" id="productStockModal" tabindex="-1">
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+                                <h5 class="modal-title">Product Stock</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+
+                            <div class="modal-body">
+                                @if(count($viewStockItems))
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Item Code</th>
+                                                <th>Color</th>
+                                                <th>Size</th>
+                                                <th>Quantity</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        @foreach($viewStockItems as $item)
+                                            <tr>
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td>{{ $item->item_code }}</td>
+                                                <td>{{ $item->color->name ?? '-' }}</td>
+                                                <td>{{ $item->size->name ?? '-' }}</td>
+                                                <td>
+                                                    <span class="badge {{ $item->quantity > 0 ? 'bg-success' : 'bg-danger' }}">
+                                                        {{ $item->quantity ?? 0 }}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
+                                    </table>
+                                @else
+                                    <p class="text-center text-muted">No stock found</p>
+                                @endif
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
                 <div class="mt-3">
                     {{ $products->links() }}
                 </div>
@@ -261,7 +313,6 @@
             }
         });
     });
-
 </script>
 <script>
     window.addEventListener('closeImportModal', () => {
@@ -277,6 +328,14 @@
             document.getElementById('stockUpdateModal')
         );
         modal?.hide();
+    });
+</script>
+<script>
+    window.addEventListener('open-product-stock-modal', () => {
+        let modal = new bootstrap.Modal(
+            document.getElementById('productStockModal')
+        );
+        modal.show();
     });
 </script>
 

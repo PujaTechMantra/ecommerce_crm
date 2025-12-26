@@ -33,6 +33,7 @@ class ProductList extends Component
     public $collections = [];
     public $categories = [];
     public $subCategories = [];
+    public $viewStockItems = [];
 
     protected $rules = [
         'csv_file' => 'required|mimes:csv,txt|max:2048',
@@ -81,6 +82,15 @@ class ProductList extends Component
     public function openFile()
     {
         $this->dispatch('openFile');
+    }
+
+    public function openStockView($productId)
+    {
+        $this->viewStockItems = ProductItem::with(['color', 'size'])
+            ->where('product_id', $productId)
+            ->get();
+
+        $this->dispatch('open-product-stock-modal');
     }
 
     public function import()
