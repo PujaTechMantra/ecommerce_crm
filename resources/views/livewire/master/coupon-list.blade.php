@@ -52,9 +52,16 @@
                     </div>
 
                     <div class="col-md-4 mb-3">
-                        <label class="required">Amount</label>
-                        <input type="number" min="0" class="form-control" wire:model="amount">
-                        @error('amount') <span class="text-danger">{{ $message }}</span> @enderror
+                       <label class="required">Value</label>
+                            <small class="text-muted d-block">Percentage (%) or Amount (₹)</small>
+                        <input type="number" min="0" class="form-control" wire:model="value">
+                        @error('value') <span class="text-danger">{{ $message }}</span> @enderror
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label>Min Amount</label>
+                        <input type="number" min="0" class="form-control" wire:model="min_amount">
+                        @error('min_amount') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
 
                     <div class="col-md-4 mb-3">
@@ -110,7 +117,8 @@
                         <th>Name</th>
                         <th>Code</th>
                         <th>Coupon Type</th>
-                        <th>Amount</th>
+                        <th>Value</th>
+                        <th>Min Amount</th>
                         <th>Validity</th>
                         <th>Status</th>
                         <th>Action</th>
@@ -123,7 +131,14 @@
                         <td>{{ $coupon->name }}</td>
                         <td>{{ $coupon->coupon_code }}</td>
                         <td>{{ $coupon->coupon_type == 1 ? 'Percentage' : 'Flat' }}</td>
-                        <td>{{ $coupon->amount }}</td>
+                        <td>
+                            @if ($coupon->coupon_type == 2)
+                                ₹{{ $coupon->value }}
+                            @else
+                                {{ $coupon->value }}%
+                            @endif
+                        </td>
+                        <td>{{ $coupon->min_amount ? $coupon->min_amount : 'N/A'}}</td>
                         <td> 
                            {{ \Carbon\Carbon::parse($coupon->start_date)->format('d M Y') }}
                             -

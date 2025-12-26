@@ -15,7 +15,8 @@ class CouponList extends Component
     public $name;
     public $coupon_code;
     public $coupon_type = 2;
-    public $amount;
+    public $value;
+    public $min_amount;
     public $max_time_of_use;
     public $max_time_one_can_use;
     public $start_date;
@@ -29,7 +30,8 @@ class CouponList extends Component
             'name' => 'required|string|max:255',
             'coupon_code' => 'required|string|max:255|unique:coupons,coupon_code,' . $this->coupon_id,
             'coupon_type' => 'required|in:1,2',
-            'amount' => 'required|numeric',
+            'value' => 'required|numeric',
+            'min_amount' => 'nullable|numeric',
             'max_time_of_use' => 'required|integer',
             'max_time_one_can_use' => 'required|integer',
             'start_date' => 'required|date',
@@ -61,14 +63,15 @@ class CouponList extends Component
             'slug' => Str::slug($this->name),
             'coupon_code' => $this->coupon_code,
             'coupon_type' => $this->coupon_type,
-            'amount' => $this->amount,
+            'value' => $this->value,
+            'min_amount' => $this->min_amount,
             'max_time_of_use' => $this->max_time_of_use,
             'max_time_one_can_use' => $this->max_time_one_can_use,
             'start_date' => $this->start_date,
             'end_date' => $this->end_date,
         ]);
 
-        session()->flash('success', 'Coupon created successfully!');
+        session()->flash('message', 'Coupon created successfully!');
         $this->ActiveCreateTab(1);
     }
 
@@ -80,7 +83,8 @@ class CouponList extends Component
         $this->name = $coupon->name;
         $this->coupon_code = $coupon->coupon_code;
         $this->coupon_type = $coupon->coupon_type;
-        $this->amount = $coupon->amount;
+        $this->value = $coupon->value;
+        $this->min_amount = $coupon->min_amount;
         $this->max_time_of_use = $coupon->max_time_of_use;
         $this->max_time_one_can_use = $coupon->max_time_one_can_use;
         $this->start_date = Carbon::parse($coupon->start_date)->format('Y-m-d');
@@ -98,21 +102,22 @@ class CouponList extends Component
             'slug' => Str::slug($this->name),
             'coupon_code' => $this->coupon_code,
             'coupon_type' => $this->coupon_type,
-            'amount' => $this->amount,
+            'value' => $this->value,
+            'min_amount' => $this->min_amount,
             'max_time_of_use' => $this->max_time_of_use,
             'max_time_one_can_use' => $this->max_time_one_can_use,
             'start_date' => $this->start_date,
             'end_date' => $this->end_date,
         ]);
 
-        session()->flash('success', 'Coupon updated successfully!');
+        session()->flash('message', 'Coupon updated successfully!');
         $this->ActiveCreateTab(1);
     }
 
     public function delete($id)
     {
         Coupon::findOrFail($id)->delete();
-        session()->flash('success', 'Coupon deleted successfully!');
+        session()->flash('message', 'Coupon deleted successfully!');
     }
 
     public function resetForm()
@@ -122,7 +127,8 @@ class CouponList extends Component
             'name',
             'coupon_code',
             'coupon_type',
-            'amount',
+            'value',
+            'min_amount',
             'max_time_of_use',
             'max_time_one_can_use',
             'start_date',
@@ -135,7 +141,10 @@ class CouponList extends Component
     public function render()
     {
         $coupons = Coupon::whereNull('deleted_at')
-            ->where('coupon_code', 'like', "%{$this->search}%")
+            ->where(function ($q) {
+                $q->where('coupon_code', 'like', "%{$this->search}%")
+                ->orWhere('name', 'like', "%{$this->search}%");
+            })
             ->latest()
             ->get();
 
