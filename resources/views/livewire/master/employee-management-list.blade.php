@@ -36,13 +36,17 @@
                         <div class="row">
                             <div class="col-lg-12 d-flex justify-content-end my-auto">
                                 <div class="d-flex align-items-center">
-                                    <input type="text" wire:model.debounce.300ms="search"
+                                        <input type="text"
+                                                wire:model.live.debounce.300ms="search"
+                                                class="form-control border border-2 p-2 custom-input-sm"
+                                                placeholder="Search...">
+                                        <!-- <input type="text" wire:model.debounce.300ms="search"
                                            class="form-control border border-2 p-2 custom-input-sm"
-                                           placeholder="Search here...">
-                                        <button type="button" wire:click="searchButtonClicked"
+                                           placeholder="Search here..."> -->
+                                        <!-- <button type="button" wire:click="searchButtonClicked"
                                                 class="btn btn-dark text-white mb-0 custom-input-sm ms-2">
                                             <span class="material-icons">search</span>
-                                        </button>
+                                        </button> -->
                                     <!-- Refresh Button -->
                                     <button type="button" wire:click="resetSearch" class="btn btn-danger text-white mb-0 custom-input-sm ms-2">
                                             <i class="ri-restart-line"></i>

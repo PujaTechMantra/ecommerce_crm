@@ -54,7 +54,7 @@
         </div>
         <!-- /Login -->
         <img src="{{ asset('assets/img/tree-3.png') }}" alt="auth-tree" class="authentication-image-object-left d-none d-lg-block">
-        <img src="{{ asset('assets/img/login-back1.webp') }}" alt="auth-tree" class="authentication-image-object-right d-none d-lg-block">
+        <!-- <img src="{{ asset('assets/img/login-back1.webp') }}" alt="auth-tree" class="authentication-image-object-right d-none d-lg-block"> -->
       </div>
     </div>
   </div>

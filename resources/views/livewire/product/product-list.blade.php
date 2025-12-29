@@ -147,9 +147,9 @@
             <div class="card-header">
                 <h5>Product List</h5>
                 <div class="row g-2">
-                    <div class="col-md-3">
+                    <div class="col-md-3" wire:ignore>
                         <label>Collection</label>
-                        <select wire:model.live="collection_id" class="form-select">
+                        <select id="filter_collection" class="form-select" data-selected="{{ $collection_id }}">
                             <option value="">All</option>
                             @foreach($collections as $c)
                                 <option value="{{ $c->id }}">{{ $c->name }}</option>
@@ -157,28 +157,32 @@
                         </select>
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-md-3" wire:ignore>
                         <label>Category</label>
-                        <select wire:model.live="cat_id" class="form-select">
+                        <select id="filter_category" class="form-select" data-selected="{{ $cat_id }}">
                             <option value="">All</option>
                             @foreach($categories as $cat)
                                 <option value="{{ $cat->id }}">{{ $cat->title }}</option>
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-md-3">
+                   <div class="col-md-3" wire:ignore>
                         <label>Sub Category</label>
-                        <select wire:model.live="sub_cat_id" class="form-select">
+                        <select id="filter_sub_category" class="form-select" data-selected="{{ $sub_cat_id }}">
                             <option value="">All</option>
                             @foreach($subCategories as $subCat)
                                 <option value="{{ $subCat->id }}">{{ $subCat->title }}</option>
                             @endforeach
                         </select>
                     </div>
-
-                    <div class="col-md-3">
-                        <label></label>
-                        <input type="text" wire:model.live.debounce.500ms="keyword" class="form-control" placeholder="Search">
+                   <div class="col-md-3">
+                        <label class="d-block">&nbsp;</label>
+                        <div class="d-flex align-items-center gap-2">
+                            <input type="text" wire:model.live.debounce.500ms="keyword" class="form-control border border-2 p-2 custom-input-sm" placeholder="Search">
+                            <button type="button" onclick="location.reload()" class="btn btn-danger text-white custom-input-sm">
+                                <i class="ri-restart-line"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -296,6 +300,9 @@
         </div>
     </div>
 @section('page-script')
+<link rel="stylesheet" href="{{ asset('assets/custom_css/component-chosen.css') }}">
+<script src="{{ asset('assets/js/chosen.jquery.js') }}"></script>
+
 <script>
     window.addEventListener('confirmDelete', function (event) {
         let itemId = event.detail.itemId;
@@ -336,6 +343,46 @@
             document.getElementById('productStockModal')
         );
         modal.show();
+    });
+</script>
+
+<script>
+    var jq = $.noConflict();
+
+    function initFilterChosen() {
+
+        function initChosen(id, model) {
+            const el = jq(id);
+            if (!el.length) return;
+
+            el.chosen({ width: '100%' });
+
+            // set selected value on load
+            const selected = el.data('selected');
+            if (selected !== undefined && selected !== '') {
+                el.val(selected).trigger('chosen:updated');
+            }
+
+            // sync to Livewire
+            el.on('change', function () {
+                @this.set(model, jq(this).val());
+            });
+        }
+
+        initChosen('#filter_collection', 'collection_id');
+        initChosen('#filter_category', 'cat_id');
+        initChosen('#filter_sub_category', 'sub_cat_id');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(initFilterChosen, 300);
+    });
+
+    // re-sync after Livewire DOM update
+    Livewire.hook('message.processed', () => {
+        jq('#filter_collection').trigger('chosen:updated');
+        jq('#filter_category').trigger('chosen:updated');
+        jq('#filter_sub_category').trigger('chosen:updated');
     });
 </script>
 

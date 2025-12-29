@@ -17,7 +17,7 @@
 @else
 <div class="col-lg-12 d-flex justify-content-end mb-3">
     <button class="btn btn-dark btn-sm" wire:click="ActiveCreateTab(1)">
-         <i class="ri-arrow-go-back-line"></i>Back
+        <i class="ri-arrow-go-back-line ri-16px me-0 me-sm-2 align-baseline"></i>Back
     </button>
 </div>
 @endif
@@ -102,12 +102,28 @@
 @else
 <div class="col-lg-12">
     <div class="card">
-        <div class="card-header d-flex justify-content-between">
-            <h6>Coupon List</h6>
-            <input type="text" class="form-control w-50"
-                   wire:model.live.debounce.300ms="search"
-                   placeholder="Search code...">
-        </div>
+         <div class="card-header">
+            <div class="row align-items-center">
+                    <!-- Left -->
+                    <div class="col-md-8">
+                        <h6 class="mb-0">Coupon List</h6>
+                    </div>
+                    <!-- Right -->
+                    <div class="col-md-4 d-flex justify-content-end align-items-center gap-2">
+                        <input
+                            type="text"
+                            wire:model.live.debounce.300ms="search"
+                            class="form-control border border-2 p-2 custom-input-sm"
+                            placeholder="Search...">
+                        <button
+                            type="button"
+                            onclick="location.reload()"
+                            class="btn btn-danger text-white custom-input-sm">
+                            <i class="ri-restart-line"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
 
         <div class="card-body p-0">
             <table class="table mb-0">

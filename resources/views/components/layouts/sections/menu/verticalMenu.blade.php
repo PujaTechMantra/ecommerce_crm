@@ -6,7 +6,7 @@
       {{-- <span class="app-brand-logo demo me-1">
         @include('_partials.macros',["height"=>20])
       </span> --}}
-      <img src="{{asset('assets/img/new-logo.png')}}" alt="" style="width: 80px; height: auto;">
+      <!-- <img src="{{asset('assets/img/new-logo.png')}}" alt="" style="width: 80px; height: auto;"> -->
       <span class="app-brand-text demo menu-text fw-semibold ms-2">E-CRM</span>
     </a>
 
@@ -135,7 +135,9 @@
           </a>
         </li>
       </ul>
-    </li> --}}
+    </li> 
+    --}}
+    {{--
       <li class="menu-item {{ (request()->is('admin/rider*')) ? 'open' : '' }}">
         <a href="#" class="menu-link menu-toggle waves-effect" target="_blank">
           <i class="menu-icon tf-icons ri-bike-line"></i>
@@ -159,6 +161,8 @@
           </li> --}}
         </ul>
       </li>
+      --}}
+  {{--
     <li class="menu-item {{ (request()->is('admin/stock*')) ? 'open' : '' }}" style="">
       <a href="#" class="menu-link menu-toggle waves-effect" target="_blank">
         <i class="menu-icon tf-icons ri-store-line"></i>
@@ -171,8 +175,10 @@
           </a>
         </li>
       </ul>
-    </li>
+    </li> 
+    --}}
     {{-- @if (hasPermissionByParent('model_management')) --}}
+    {{--
       <li class="menu-item {{ (request()->is('admin/models*')) ? 'open' : '' }}" style="">
         <a href="#" class="menu-link menu-toggle waves-effect" target="_blank">
           <i class="menu-icon tf-icons ri-product-hunt-line"></i>
@@ -197,7 +203,9 @@
           </li>
         </ul>
       </li>
+      --}}
     {{-- @endif --}}
+    {{--
     <li class="menu-item {{ (request()->is('admin/vehicle*')) ? 'open' : '' }}" style="">
       <a href="#" class="menu-link menu-toggle waves-effect" target="_blank">
         <i class="menu-icon tf-icons ri-bike-line"></i>
@@ -217,6 +225,8 @@
         </li>
       </ul>
     </li>
+    --}}
+    {{--
       <li class="menu-item {{ (request()->is('admin/payment*')) ? 'open' : '' }}" style="">
         <a href="#" class="menu-link menu-toggle waves-effect" target="_blank">
           <i class="menu-icon tf-icons ri-wallet-line"></i>
@@ -245,6 +255,8 @@
           </li>
         </ul>
       </li>
+      --}}
+      {{--
       <li class="menu-item {{ (request()->is('admin/offer*')) ? 'open' : '' }}" style="">
       <a href="#" class="menu-link menu-toggle waves-effect" target="_blank">
         <i class="menu-icon tf-icons ri-price-tag-3-line"></i>
@@ -258,7 +270,9 @@
         </li>
       </ul>
     </li>
+    --}}
  {{-- @if (hasPermissionByParent('bom_part')) --}}
+ {{--
    <li class="menu-item {{ (request()->is('admin/bom-parts*')) ? 'open' : '' }}" style="">
       <a href="#" class="menu-link menu-toggle waves-effect" target="_blank">
         <i class="menu-icon tf-icons ri-tools-line"></i>
@@ -272,8 +286,10 @@
         </li>
       </ul>
     </li>
+    --}}
   {{-- @endif --}}
   {{-- @if (hasPermissionByParent('selling_query')) --}}
+  {{--
    <li class="menu-item {{ (request()->is('admin/selling-query*')) ? 'open' : '' }}" style="">
       <a href="#" class="menu-link menu-toggle waves-effect" target="_blank">
         <i class="menu-icon tf-icons ri-question-line"></i>
@@ -287,8 +303,10 @@
         </li>
       </ul>
     </li>
+    --}}
   {{-- @endif --}}
   {{-- Organization Management --}}
+  {{--
         <li class="menu-header">Organization Management</li>
         <li class="menu-item {{ (request()->is('admin/organization*')) ? 'open' : '' }}">
           <a href="#" class="menu-link menu-toggle waves-effect">
@@ -307,8 +325,10 @@
             </li>
           </ul>
         </li>
+        --}}
   {{-- Push Notifications Management --}}
       {{-- @if (hasPermissionByParent('organization_management')) --}}
+      {{--
         <li class="menu-item {{ (request()->is('admin/notifications*')) ? 'open' : '' }}">
           <a href="#" class="menu-link menu-toggle waves-effect">
             <i class="menu-icon tf-icons ri-notification-line"></i>
@@ -320,6 +340,7 @@
             </li>
           </ul>
         </li>
+        --}}
       {{-- @endif --}}
 
     <div class="ps__rail-x" style="left: 0px; bottom: 0px;">

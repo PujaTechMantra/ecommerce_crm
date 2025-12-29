@@ -13,7 +13,10 @@
          <div class="d-flex justify-content-between mb-4 align-items-center">
             <h4>Add Product</h4>
             <div>
-                <a href="{{route('admin.product.index')}}" class="btn btn-dark btn-sm me-2">Back</a>
+                <a href="{{route('admin.product.index')}}" class="btn btn-dark btn-sm me-2">
+                    <i class="ri-arrow-go-back-line ri-16px me-0 me-sm-2 align-baseline"></i>
+                    Back
+                </a>
                 <button wire:click="save" class="btn btn-primary btn-sm">Publish Product</button>
             </div>
         </div>

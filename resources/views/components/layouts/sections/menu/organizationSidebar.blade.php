@@ -6,7 +6,7 @@
       {{-- <span class="app-brand-logo demo me-1">
         @include('_partials.macros',["height"=>20])
       </span> --}}
-      <img src="{{asset('assets/img/new-logo.png')}}" alt="" style="width: 80px; height: auto;">
+      <!-- <img src="{{asset('assets/img/new-logo.png')}}" alt="" style="width: 80px; height: auto;"> -->
     </a>
 
     <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto">

@@ -13,7 +13,10 @@
         <div class="d-flex justify-content-between mb-4 align-items-center">
             <h4>Edit Product</h4>
             <div>
-                <a href="{{route('admin.product.index')}}" class="btn btn-dark btn-sm me-2">Back</a>
+                <a href="{{route('admin.product.index')}}" class="btn btn-dark btn-sm me-2">
+                    <i class="ri-arrow-go-back-line ri-16px me-0 me-sm-2 align-baseline"></i>
+                    Back
+                </a>
                 <button wire:click="save" class="btn btn-primary btn-sm">Update Product</button>
             </div>
         </div>
@@ -125,7 +128,7 @@
                 <div class="card mb-4">
                     <div class="card-body">
                         <div class="mb-3" wire:ignore>
-                            <label class="card-header required">Collection</label>
+                            <label class="required">Collection</label>
                             <select
                                 id="collection_id"
                                 class="form-select"

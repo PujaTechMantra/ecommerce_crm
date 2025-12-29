@@ -18,12 +18,12 @@
               </div>
               <div class="col-lg-6 col-5 my-auto text-end">
                 <div class="ms-md-auto d-flex align-items-center">
-                  <input type="text" wire:model.debounce.500ms="search"
-                    class="form-control border border-2 p-2 custom-input-sm" placeholder="Enter designation">
-                  <button type="button" wire:click="btn_search" class="btn btn-dark text-white mb-0 custom-input-sm">
-                    <span class="material-icons">search</span>
-                  </button>
-                  <!-- Optionally, add a search icon button -->
+                    <input type="text" wire:model.live.debounce.300ms="search"
+                      class="form-control border border-2 p-2 custom-input-sm"
+                        placeholder="Search...">
+                        <button type="button" onclick="location.reload()" class="btn btn-danger text-white mb-0 custom-input-sm ms-2">
+                          <i class="ri-restart-line"></i>
+                        </button>
                 </div>
               </div>
             </div>

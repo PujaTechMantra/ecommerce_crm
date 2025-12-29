@@ -15,14 +15,22 @@
                     </div>
 
                     <div class="col-lg-6 col-5 my-auto text-end">
-                        <div class="ms-md-auto d-flex align-items-center">
-                            <input type="text"
+                        <div class="ms-md-auto d-flex align-items-center gap-2">
+                            <input
+                                type="text"
                                 wire:model.live.debounce.500ms="search"
                                 class="form-control border border-2 p-2 custom-input-sm"
                                 placeholder="Search Categories..">
-                            
+
+                            <button
+                                type="button"
+                                onclick="location.reload()"
+                                class="btn btn-danger text-white custom-input-sm">
+                                <i class="ri-restart-line"></i>
+                            </button>
                         </div>
                     </div>
+
                 </div>
 
             </div>
