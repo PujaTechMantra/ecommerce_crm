@@ -98,6 +98,13 @@
               </a>
             </li>
           </ul>
+          <ul class="menu-sub">
+            <li class="menu-item {{ (request()->is('admin/product/review*')) ? 'open' : '' }}">
+              <a href="{{route('admin.product.review')}}" class="menu-link">
+                <div>Review</div>
+              </a>
+            </li>
+          </ul>
         </li>
         <li class="menu-item {{ (request()->is('admin/employee*')) ? 'open' : '' }}">
           <a href="#" class="menu-link menu-toggle waves-effect" target="_blank">

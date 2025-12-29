@@ -19,7 +19,7 @@ use App\Livewire\Admin\{
     PaymentVehicleSummary, RefundSummary, ChangePassword,AdminOrganizationIndex,AdminOrganizationDashboard,AdminOrganizationInvoices,AdminOrganizationPayments,PushNotificationList
 };
 use App\Livewire\Product\{
-    ProductList, AddProduct, EditProduct,
+    ProductList, AddProduct, EditProduct, ProductReviewList,
     GalleryIndex, StockProduct, MasterProductType, ProductWiseVehicle, VehicleList,
     MasterSubscription, VehicleCreate, VehicleUpdate, VehicleDetail, VehiclePaymentSummary,
     BomPartList, SellingQuery
@@ -89,6 +89,7 @@ Route::middleware(['auth:admin', 'admin.maintenance'])->prefix('admin')->group(f
         Route::get('/list', ProductList::class)->name('admin.product.index');
         Route::get('/new', AddProduct::class)->name('admin.product.add');
         Route::get('/edit/{productId}', EditProduct::class)->name('admin.product.edit');
+        Route::get('/review', ProductReviewList::class)->name('admin.product.review');
     });
 
 
